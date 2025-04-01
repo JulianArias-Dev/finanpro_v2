@@ -4,6 +4,7 @@ import 'package:finanpro_v2/views/interes_simple_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:finanpro_v2/controllers/auth_controller.dart';
+import 'package:finanpro_v2/views/components/theme_controller.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -27,13 +28,127 @@ class HomeScreen extends StatelessWidget {
           ),
           actions: [
             IconButton(
-              icon: Icon(Icons.logout, size: 25, color: Colors.white),
+              icon: Icon(Icons.exit_to_app, size: 25, color: Colors.white),
               onPressed: () {
                 authController.signOut(); // Llamar al método de cerrar sesión
               },
             ),
           ],
           backgroundColor: Color.fromARGB(255, 111, 183, 31),
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              const DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 111, 183, 31),
+                ),
+                child: Text(
+                  'Menú de Navegación',
+                  style: TextStyle(color: Colors.white, fontSize: 24),
+                ),
+              ),
+              ExpansionTile(
+                leading: const Icon(Icons.dashboard),
+                title: const Text('Educacion Financiera'),
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.arrow_right),
+                    title: const Text('Interés Simple'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.arrow_right),
+                    title: const Text('Interés Compuesto'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.arrow_right),
+                    title: const Text('Anualidades'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.arrow_right),
+                    title: const Text('Gradientes'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+              ExpansionTile(
+                leading: const Icon(Icons.work),
+                title: const Text('Gestión Financiera'),
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.arrow_right),
+                    title: const Text('Nuevo Préstamo'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.arrow_right),
+                    title: const Text('Prestamos Vigentes'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.arrow_right),
+                    title: const Text('Pagar Préstamo'),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+              ExpansionTile(
+                leading: const Icon(Icons.dashboard),
+                title: const Text('Aplicación'),
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.dark_mode),
+                    title: const Text('Modo Oscuro'),
+                    onTap: () {
+                      Get.find<ThemeController>().setDarkMode();
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.light_mode),
+                    title: const Text('Modo Claro'),
+                    onTap: () {
+                      Get.find<ThemeController>().setLightMode();
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 50),
+              ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text('Mi cuenta'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.logout),
+                title: const Text('Cerrar sesión'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
         ),
         resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
@@ -76,7 +191,7 @@ class HomeScreen extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Column(
@@ -136,7 +251,7 @@ class HomeScreen extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Column(
@@ -189,7 +304,7 @@ class HomeScreen extends StatelessWidget {
                 )
                 : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 25),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),

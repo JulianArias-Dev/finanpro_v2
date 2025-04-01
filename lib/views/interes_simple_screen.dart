@@ -8,7 +8,7 @@ class InterestScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    InteresSimpleController logic_controller = InteresSimpleController();
+    InteresSimpleController logicController = InteresSimpleController();
     TextEditingController capitalController = TextEditingController();
     TextEditingController rateController = TextEditingController();
     TextEditingController yearController = TextEditingController();
@@ -66,11 +66,11 @@ class InterestScreen extends StatelessWidget {
                       double.tryParse(interesController.text) ?? 0;
                   try {
                     if (capital == 0) {
-                      capitalController.text = logic_controller
+                      capitalController.text = logicController
                           .calcularCapitalSimple(rate / 100, generated, duree)
                           .toStringAsFixed(2);
                     } else if (rate == 0) {
-                      rateController.text = (logic_controller
+                      rateController.text = (logicController
                                   .calcularTasaInteresSimple(
                                     capital,
                                     generated,
@@ -79,7 +79,7 @@ class InterestScreen extends StatelessWidget {
                               100)
                           .toStringAsFixed(2);
                     } else if (duree.isEmpty()) {
-                      duree = logic_controller.calcularTiempoInteresSimple(
+                      duree = logicController.calcularTiempoInteresSimple(
                         capital,
                         rate / 100,
                         generated,
@@ -88,7 +88,7 @@ class InterestScreen extends StatelessWidget {
                       monthController.text = duree.months.toString();
                       dayController.text = duree.days.toString();
                     } else if (generated == 0) {
-                      interesController.text = logic_controller
+                      interesController.text = logicController
                           .calculerInteretSimple(capital, rate / 100, duree)
                           .toStringAsFixed(2);
                     }
