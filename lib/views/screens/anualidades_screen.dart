@@ -1,6 +1,6 @@
 import 'package:finanpro_v2/controllers/anualidades_controller.dart';
 import 'package:flutter/material.dart';
-import 'components/text_field.dart';
+import '../components/text_field.dart';
 
 class AnualidadesScreen extends StatefulWidget {
   const AnualidadesScreen({super.key});
