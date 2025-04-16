@@ -1,6 +1,8 @@
 import 'package:finanpro_v2/controllers/anualidades_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import '../components/text_field.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
 class AnualidadesScreen extends StatefulWidget {
   const AnualidadesScreen({super.key});
@@ -45,13 +47,27 @@ class _AnualidadesScreenState extends State<AnualidadesScreen> {
                 style: TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 20),
-              buildTextField("Capital (\$)", capitalController),
-              buildTextField("Tasa de anualidad (%)", rateController),
-              buildTextField("Periodos de Capitalizacion", periodController),
+              buildTextField(
+                "Capital (\$)",
+                capitalController,
+                isNumeric: true,
+                isMoney: true,
+              ),
+              buildTextField(
+                "Tasa de anualidad (%)",
+                rateController,
+                isNumeric: true,
+              ),
+              buildTextField(
+                "Periodos de Capitalizacion",
+                periodController,
+                isNumeric: true,
+              ),
               buildTextField(
                 "Valor Final/Actual (\$)",
                 resultController,
-                readOnly: true,
+                isNumeric: true,
+                isMoney: true,
               ),
               const SizedBox(height: 20),
               Row(
@@ -82,18 +98,33 @@ class _AnualidadesScreenState extends State<AnualidadesScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  double capital = double.tryParse(capitalController.text) ?? 0;
-                  double i = double.tryParse(rateController.text) ?? 0;
-                  int n = int.tryParse(periodController.text) ?? 0;
+                  double capital =
+                      double.tryParse(
+                        toNumericString(capitalController.text),
+                      ) ??
+                      0;
+                  double i =
+                      double.tryParse(toNumericString(rateController.text)) ??
+                      0;
+                  int n =
+                      int.tryParse(toNumericString(periodController.text)) ?? 0;
                   try {
                     if (isFutureValue) {
-                      resultController.text = controller
-                          .calcularValorFinal(capital, i / 100, n)
-                          .toStringAsFixed(2);
+                      resultController.text = toCurrencyString(
+                        controller
+                            .calcularValorFinal(capital, i / 100, n)
+                            .toStringAsFixed(2),
+                        thousandSeparator: ThousandSeparator.Comma,
+                        mantissaLength: 2,
+                      );
                     } else if (isPresentValue) {
-                      resultController.text = controller
-                          .calcularValorActual(capital, i / 100, n)
-                          .toStringAsFixed(2);
+                      resultController.text = toCurrencyString(
+                        controller
+                            .calcularValorActual(capital, i / 100, n)
+                            .toStringAsFixed(2),
+                        thousandSeparator: ThousandSeparator.Comma,
+                        mantissaLength: 2,
+                      );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

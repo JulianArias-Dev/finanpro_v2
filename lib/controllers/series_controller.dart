@@ -3,7 +3,17 @@ import 'dart:math';
 class SeriesVariablesController {
   SeriesVariablesController();
 
-  Map<String, double> serieLineal(double A, double g, double n, double i) {
+  Map<String, double> serieLineal({
+    double A = 0,
+    double g = 0,
+    int n = 0,
+    double i = 0,
+  }) {
+    if (g == 0 || A <= 0 || n <= 0 || i <= 0) {
+      throw ArgumentError(
+        "Todos los argumentos deben ser mayores que cero, y la variacion debe ser diferente de cero.",
+      );
+    }
     // A: Valor Anualidad
     // g: Tasa de crecimiento (puede ser positiva o negativa)
     // n: Número de períodos
@@ -23,10 +33,20 @@ class SeriesVariablesController {
 
     vp = double.parse(vp.toStringAsFixed(0));
     vf = double.parse(vf.toStringAsFixed(0));
-    return {'VP': vp, 'VF': vf};
+    return {'vp': vp, 'vf': vf};
   }
 
-  Map<String, double> serieGeometrica(double A, double g, double n, double i) {
+  Map<String, double> serieGeometrica({
+    double A = 0,
+    double g = 0,
+    int n = 0,
+    double i = 0,
+  }) {
+    if (g == 0 || A <= 0 || n <= 0 || i <= 0) {
+      throw ArgumentError(
+        "Todos los argumentos deben ser mayores que cero, y la variacion debe ser diferente de cero.",
+      );
+    }
     // A: Valor Anualidad
     // g: Tasa de crecimiento (puede ser positiva o negativa)
     // n: Número de períodos
@@ -45,6 +65,6 @@ class SeriesVariablesController {
 
     vp = double.parse(vp.toStringAsFixed(0));
     vf = double.parse(vf.toStringAsFixed(0));
-    return {'VP': vp, 'VF': vf};
+    return {'vp': vp, 'vf': vf};
   }
 }

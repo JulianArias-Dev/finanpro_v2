@@ -1,5 +1,6 @@
 import 'package:finanpro_v2/controllers/interes_compuesto_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import '../components/text_field.dart';
 import '../../models/tiempo.dart';
 
@@ -74,29 +75,73 @@ class _InteresCompuestoScreen extends State<InteresCompuestoScreen> {
                   const Text("Anual"),
                 ],
               ),
-              buildTextField("Capital (\$)", capitalController),
-              buildTextField("Tasa de interés (%)", rateController),
+              buildTextField(
+                "Capital (\$)",
+                capitalController,
+                isMoney: true,
+                isNumeric: true,
+              ),
+              buildTextField(
+                "Tasa de interés (%)",
+                rateController,
+                isNumeric: true,
+              ),
               const SizedBox(height: 5),
               const Text('Tiempo'),
               Row(
                 children: [
-                  Expanded(child: buildTextField("Años", yearController)),
-                  Expanded(child: buildTextField("Meses", monthController)),
-                  Expanded(child: buildTextField("Días", dayController)),
+                  Expanded(
+                    child: buildTextField(
+                      "Años",
+                      yearController,
+                      isNumeric: true,
+                    ),
+                  ),
+                  Expanded(
+                    child: buildTextField(
+                      "Meses",
+                      monthController,
+                      isNumeric: true,
+                    ),
+                  ),
+                  Expanded(
+                    child: buildTextField(
+                      "Días",
+                      dayController,
+                      isNumeric: true,
+                    ),
+                  ),
                 ],
               ),
-              buildTextField("Valor final (\$)", interesController),
+              buildTextField(
+                "Valor final (\$)",
+                interesController,
+                isMoney: true,
+                isNumeric: true,
+              ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  double capital = double.tryParse(capitalController.text) ?? 0;
-                  double rate = double.tryParse(rateController.text) ?? 0;
-                  int year = int.tryParse(yearController.text) ?? 0;
-                  int month = int.tryParse(monthController.text) ?? 0;
-                  int day = int.tryParse(dayController.text) ?? 0;
+                  double capital =
+                      double.tryParse(
+                        toNumericString(capitalController.text),
+                      ) ??
+                      0;
+                  double rate =
+                      double.tryParse(toNumericString(rateController.text)) ??
+                      0;
+                  int year =
+                      int.tryParse(toNumericString(yearController.text)) ?? 0;
+                  int month =
+                      int.tryParse(toNumericString(monthController.text)) ?? 0;
+                  int day =
+                      int.tryParse(toNumericString(dayController.text)) ?? 0;
                   Tiempo duree = Tiempo(year, month, day);
                   double generated =
-                      double.tryParse(interesController.text) ?? 0;
+                      double.tryParse(
+                        toNumericString(interesController.text),
+                      ) ??
+                      0;
                   String type =
                       isAnnual
                           ? 'annual'
@@ -115,14 +160,18 @@ class _InteresCompuestoScreen extends State<InteresCompuestoScreen> {
                       );
                     }
                     if (capital == 0) {
-                      capitalController.text = logicController
-                          .calcularCapitalCompuesto(
-                            rate / 100,
-                            generated,
-                            duree,
-                            type,
-                          )
-                          .toStringAsFixed(2);
+                      capitalController.text = toCurrencyString(
+                        logicController
+                            .calcularCapitalCompuesto(
+                              rate / 100,
+                              generated,
+                              duree,
+                              type,
+                            )
+                            .toStringAsFixed(2),
+                        thousandSeparator: ThousandSeparator.Comma,
+                        mantissaLength: 2,
+                      );
                     } else if (rate == 0) {
                       rateController.text = (logicController
                                   .calcularTasaInteresCompuesto(
@@ -144,14 +193,18 @@ class _InteresCompuestoScreen extends State<InteresCompuestoScreen> {
                       monthController.text = duree.months.toString();
                       dayController.text = duree.days.toString();
                     } else if (generated == 0) {
-                      interesController.text = logicController
-                          .calcularInteresCompuesto(
-                            capital,
-                            rate / 100,
-                            duree,
-                            type,
-                          )
-                          .toStringAsFixed(2);
+                      interesController.text = toCurrencyString(
+                        logicController
+                            .calcularInteresCompuesto(
+                              capital,
+                              rate / 100,
+                              duree,
+                              type,
+                            )
+                            .toStringAsFixed(2),
+                        thousandSeparator: ThousandSeparator.Comma,
+                        mantissaLength: 2,
+                      );
                     }
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
