@@ -1,37 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
 Widget buildTextField(
   String label,
   TextEditingController controller, {
-  bool readOnly = false,
-  bool keyboardType = false,
+  bool isNumeric = false,
+  bool isMoney = false,
+  bool readOnly = false, // Permitir campos solo de lectura
+  String? hintText,
 }) {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8.0),
-    child: TextField(
+    padding: const EdgeInsets.only(bottom: 16.0),
+    child: TextFormField(
       controller: controller,
-      keyboardType: keyboardType ? TextInputType.text : TextInputType.number,
-      readOnly: readOnly,
+      keyboardType: isNumeric ? TextInputType.number : TextInputType.text,
+      inputFormatters:
+          isMoney
+              ? [
+                MoneyInputFormatter(
+                  thousandSeparator: ThousandSeparator.Comma,
+                  mantissaLength: 2,
+                ),
+              ]
+              : null,
+      readOnly: readOnly, // Se mantiene la opción de solo lectura
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 111, 183, 31),
-            width: 2, // Border width
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 111, 183, 31),
-            width: 2, // Border width
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 111, 183, 31),
-            width: 2, // Border width
-          ),
-        ),
+        hintText: hintText,
+        border: const OutlineInputBorder(),
       ),
     ),
   );

@@ -1,6 +1,7 @@
 import 'package:finanpro_v2/controllers/anualidades_controller.dart';
+import 'package:finanpro_v2/controllers/text_formater.dart';
 import 'package:flutter/material.dart';
-import 'components/text_field.dart';
+import '../components/text_field.dart';
 
 class AnualidadesScreen extends StatefulWidget {
   const AnualidadesScreen({super.key});
@@ -45,13 +46,27 @@ class _AnualidadesScreenState extends State<AnualidadesScreen> {
                 style: TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 20),
-              buildTextField("Capital (\$)", capitalController),
-              buildTextField("Tasa de anualidad (%)", rateController),
-              buildTextField("Periodos de Capitalizacion", periodController),
+              buildTextField(
+                "Capital (\$)",
+                capitalController,
+                isNumeric: true,
+                isMoney: true,
+              ),
+              buildTextField(
+                "Tasa de anualidad (%)",
+                rateController,
+                isNumeric: true,
+              ),
+              buildTextField(
+                "Periodos de Capitalizacion",
+                periodController,
+                isNumeric: true,
+              ),
               buildTextField(
                 "Valor Final/Actual (\$)",
                 resultController,
-                readOnly: true,
+                isNumeric: true,
+                isMoney: true,
               ),
               const SizedBox(height: 20),
               Row(
@@ -82,18 +97,18 @@ class _AnualidadesScreenState extends State<AnualidadesScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  double capital = double.tryParse(capitalController.text) ?? 0;
-                  double i = double.tryParse(rateController.text) ?? 0;
-                  int n = int.tryParse(periodController.text) ?? 0;
+                  double capital = parseCurrency(capitalController.text);
+                  double i = parseCurrency(rateController.text);
+                  int n = parseCurrency(periodController.text).toInt();
                   try {
                     if (isFutureValue) {
-                      resultController.text = controller
-                          .calcularValorFinal(capital, i / 100, n)
-                          .toStringAsFixed(2);
+                      resultController.text = formatCurrency(
+                        controller.calcularValorFinal(capital, i / 100, n),
+                      );
                     } else if (isPresentValue) {
-                      resultController.text = controller
-                          .calcularValorActual(capital, i / 100, n)
-                          .toStringAsFixed(2);
+                      resultController.text = formatCurrency(
+                        controller.calcularValorActual(capital, i / 100, n),
+                      );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

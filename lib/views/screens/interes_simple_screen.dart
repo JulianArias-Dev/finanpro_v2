@@ -1,10 +1,12 @@
 import 'package:finanpro_v2/controllers/interes_simple_controller.dart';
 import 'package:finanpro_v2/models/tiempo.dart';
+import 'package:finanpro_v2/controllers/text_formater.dart';
 import 'package:flutter/material.dart';
-import 'components/text_field.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+import '../components/text_field.dart';
 
-class InterestScreen extends StatelessWidget {
-  const InterestScreen({super.key});
+class InteresSimpleScreen extends StatelessWidget {
+  const InteresSimpleScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,43 +43,83 @@ class InterestScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 20),
-              buildTextField("Capital (\$)", capitalController),
-              buildTextField("Tasa de interés (%)", rateController),
+              buildTextField(
+                "Capital (\$)",
+                capitalController,
+                isNumeric: true,
+                isMoney: true,
+              ),
+              buildTextField(
+                "Tasa de interés (%)",
+                rateController,
+                isNumeric: true,
+              ),
               const SizedBox(height: 5),
               const Text('Tiempo'),
               Row(
                 children: [
-                  Expanded(child: buildTextField("Años", yearController)),
-                  Expanded(child: buildTextField("Meses", monthController)),
-                  Expanded(child: buildTextField("Días", dayController)),
+                  Expanded(
+                    child: buildTextField(
+                      "Años",
+                      yearController,
+                      isNumeric: true,
+                    ),
+                  ),
+                  Expanded(
+                    child: buildTextField(
+                      "Meses",
+                      monthController,
+                      isNumeric: true,
+                    ),
+                  ),
+                  Expanded(
+                    child: buildTextField(
+                      "Días",
+                      dayController,
+                      isNumeric: true,
+                    ),
+                  ),
                 ],
               ),
-              buildTextField("Interés total (\$)", interesController),
+              buildTextField(
+                "Interés total (\$)",
+                interesController,
+                isNumeric: true,
+                isMoney: true,
+              ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  double capital = double.tryParse(capitalController.text) ?? 0;
-                  double rate = double.tryParse(rateController.text) ?? 0;
-                  int year = int.tryParse(yearController.text) ?? 0;
-                  int month = int.tryParse(monthController.text) ?? 0;
-                  int day = int.tryParse(dayController.text) ?? 0;
+                  double capital = parseCurrency(capitalController.text);
+                  double rate = parseCurrency(rateController.text);
+                  double generated = parseCurrency(interesController.text);
+
+                  int year =
+                      int.tryParse(toNumericString(yearController.text)) ?? 0;
+                  int month =
+                      int.tryParse(toNumericString(monthController.text)) ?? 0;
+                  int day =
+                      int.tryParse(toNumericString(dayController.text)) ?? 0;
                   Tiempo duree = Tiempo(year, month, day);
-                  double generated =
-                      double.tryParse(interesController.text) ?? 0;
+
                   try {
                     if (capital == 0) {
-                      capitalController.text = logicController
-                          .calcularCapitalSimple(rate / 100, generated, duree)
-                          .toStringAsFixed(2);
+                      capitalController.text = formatCurrency(
+                        logicController.calcularCapitalSimple(
+                          rate / 100,
+                          generated,
+                          duree,
+                        ),
+                      );
                     } else if (rate == 0) {
-                      rateController.text = (logicController
-                                  .calcularTasaInteresSimple(
-                                    capital,
-                                    generated,
-                                    duree,
-                                  ) *
-                              100)
-                          .toStringAsFixed(2);
+                      double newrate =
+                          logicController.calcularTasaInteresSimple(
+                            capital,
+                            generated,
+                            duree,
+                          ) *
+                          100;
+                      rateController.text = newrate.toStringAsFixed(2);
                     } else if (duree.isEmpty()) {
                       duree = logicController.calcularTiempoInteresSimple(
                         capital,
@@ -88,9 +130,13 @@ class InterestScreen extends StatelessWidget {
                       monthController.text = duree.months.toString();
                       dayController.text = duree.days.toString();
                     } else if (generated == 0) {
-                      interesController.text = logicController
-                          .calculerInteretSimple(capital, rate / 100, duree)
-                          .toStringAsFixed(2);
+                      interesController.text = formatCurrency(
+                        logicController.calculerInteretSimple(
+                          capital,
+                          rate / 100,
+                          duree,
+                        ),
+                      );
                     }
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(

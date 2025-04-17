@@ -37,30 +37,10 @@ class RegisterScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              buildTextField(
-                "Primer Nombre",
-                firstNameController,
-                readOnly: false,
-                keyboardType: true,
-              ),
-              buildTextField(
-                "Segundo Nombre",
-                secondNameController,
-                readOnly: false,
-                keyboardType: true,
-              ),
-              buildTextField(
-                "Primer Apellido",
-                firstLastNameController,
-                readOnly: false,
-                keyboardType: true,
-              ),
-              buildTextField(
-                "Segundo Apellido",
-                secondLastNameController,
-                readOnly: false,
-                keyboardType: true,
-              ),
+              buildTextField("Primer Nombre", firstNameController),
+              buildTextField("Segundo Nombre", secondNameController),
+              buildTextField("Primer Apellido", firstLastNameController),
+              buildTextField("Segundo Apellido", secondLastNameController),
               Row(
                 children: [
                   Expanded(
@@ -68,7 +48,7 @@ class RegisterScreen extends StatelessWidget {
                       "Fecha de Nacimiento",
                       birthDateController,
                       readOnly: false,
-                      keyboardType: true,
+                      isNumeric: true,
                     ),
                   ),
                   IconButton(
@@ -89,15 +69,10 @@ class RegisterScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              buildTextField("Cédula", idController),
-              buildTextField(
-                "Email",
-                emailController,
-                readOnly: false,
-                keyboardType: true,
-              ),
-              buildTextField("Teléfono", phoneController),
-              buildTextField("Clave", passwordController),
+              buildTextField("Cédula", idController, isNumeric: true),
+              buildTextField("Email", emailController),
+              buildTextField("Teléfono", phoneController, isNumeric: true),
+              buildTextField("Clave", passwordController, isNumeric: true),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {

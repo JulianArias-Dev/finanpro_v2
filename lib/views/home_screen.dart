@@ -1,10 +1,15 @@
-import 'package:finanpro_v2/views/anualidades_screen.dart';
-import 'package:finanpro_v2/views/interes_compuesto_screen.dart';
-import 'package:finanpro_v2/views/interes_simple_screen.dart';
+import 'package:finanpro_v2/views/screens/amortizacion_screen.dart';
+import 'package:finanpro_v2/views/screens/anualidades_screen.dart';
+import 'package:finanpro_v2/views/screens/capitalizacion_screen.dart';
+import 'package:finanpro_v2/views/screens/gradientes_screen.dart';
+import 'package:finanpro_v2/views/screens/interes_compuesto_screen.dart';
+import 'package:finanpro_v2/views/screens/interes_simple_screen.dart';
+import 'package:finanpro_v2/views/screens/series_variables_screen.dart';
+import 'package:finanpro_v2/views/screens/tir_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:finanpro_v2/controllers/auth_controller.dart';
-import 'package:finanpro_v2/views/components/theme_controller.dart';
+import 'package:finanpro_v2/views/components/my_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -36,120 +41,7 @@ class HomeScreen extends StatelessWidget {
           ],
           backgroundColor: Color.fromARGB(255, 111, 183, 31),
         ),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              const DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 111, 183, 31),
-                ),
-                child: Text(
-                  'Menú de Navegación',
-                  style: TextStyle(color: Colors.white, fontSize: 24),
-                ),
-              ),
-              ExpansionTile(
-                leading: const Icon(Icons.dashboard),
-                title: const Text('Educacion Financiera'),
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.arrow_right),
-                    title: const Text('Interés Simple'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.arrow_right),
-                    title: const Text('Interés Compuesto'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.arrow_right),
-                    title: const Text('Anualidades'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.arrow_right),
-                    title: const Text('Gradientes'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              ),
-              ExpansionTile(
-                leading: const Icon(Icons.work),
-                title: const Text('Gestión Financiera'),
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.arrow_right),
-                    title: const Text('Nuevo Préstamo'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.arrow_right),
-                    title: const Text('Prestamos Vigentes'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.arrow_right),
-                    title: const Text('Pagar Préstamo'),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              ),
-              ExpansionTile(
-                leading: const Icon(Icons.dashboard),
-                title: const Text('Aplicación'),
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.dark_mode),
-                    title: const Text('Modo Oscuro'),
-                    onTap: () {
-                      Get.find<ThemeController>().setDarkMode();
-                      Navigator.pop(context);
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.light_mode),
-                    title: const Text('Modo Claro'),
-                    onTap: () {
-                      Get.find<ThemeController>().setLightMode();
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 50),
-              ListTile(
-                leading: const Icon(Icons.person),
-                title: const Text('Mi cuenta'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.logout),
-                title: const Text('Cerrar sesión'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        ),
+        drawer: MyDrawer(),
         resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
           child: Column(
@@ -215,7 +107,7 @@ class HomeScreen extends StatelessWidget {
                           _buildOptionButton(
                             "Interés Simple",
                             context,
-                            const InterestScreen(),
+                            const InteresSimpleScreen(),
                           ),
                           _buildOptionButton(
                             "Interés Compuesto",
@@ -227,19 +119,27 @@ class HomeScreen extends StatelessWidget {
                             context,
                             const AnualidadesScreen(),
                           ),
-                          _buildOptionButton("Gradientes", context, null),
+                          _buildOptionButton(
+                            "Gradientes",
+                            context,
+                            const GradientesScreen(),
+                          ),
+                          _buildOptionButton(
+                            "Series Variables",
+                            context,
+                            const SeriesVariablesScreen(),
+                          ),
                           _buildOptionButton(
                             "Sistemas de Amortización",
                             context,
-                            null,
+                            const AmortizacionScreen(),
                           ),
                           _buildOptionButton(
                             "Sistemas de Capitalización",
                             context,
-                            null,
+                            const CapitalizacionScreen(),
                           ),
-                          _buildOptionButton("TIR", context, null),
-                          _buildOptionButton("UVR", context, null),
+                          _buildOptionButton("TIR", context, const TirScreen()),
                         ],
                       ),
                     ),
