@@ -1,7 +1,7 @@
 import 'package:finanpro_v2/controllers/series_controller.dart';
+import 'package:finanpro_v2/controllers/text_formater.dart';
 import 'package:finanpro_v2/views/components/text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
 class SeriesVariablesScreen extends StatefulWidget {
   const SeriesVariablesScreen({super.key});
@@ -17,7 +17,7 @@ class _SeriesVariablesScreen extends State<SeriesVariablesScreen> {
   TextEditingController periodoController = TextEditingController();
   TextEditingController tasaController = TextEditingController();
   TextEditingController vpController = TextEditingController();
-  TextEditingController vfsaController = TextEditingController();
+  TextEditingController vfController = TextEditingController();
 
   String tipoGradiente = 'Lineal';
 
@@ -103,7 +103,7 @@ class _SeriesVariablesScreen extends State<SeriesVariablesScreen> {
               ),
               buildTextField(
                 "Valor Futuro (VF)",
-                vfsaController,
+                vfController,
                 isNumeric: true,
                 isMoney: true,
                 readOnly: true,
@@ -112,13 +112,12 @@ class _SeriesVariablesScreen extends State<SeriesVariablesScreen> {
               ElevatedButton(
                 onPressed: () {
                   // Lógica para calcular el gradiente
-                  double pagos = double.tryParse(pagosController.text) ?? 0;
-                  double variacion =
-                      double.tryParse(variacionController.text) ?? 0;
+                  double pagos = parseCurrency(pagosController.text);
+                  double variacion = parseCurrency(variacionController.text);
                   variacion =
                       tipoGradiente == 'Lineal' ? variacion : (variacion / 100);
-                  int periodo = int.tryParse(periodoController.text) ?? 0;
-                  double tasa = double.tryParse(tasaController.text) ?? 0;
+                  int periodo = parseCurrency(periodoController.text).toInt();
+                  double tasa = parseCurrency(tasaController.text);
 
                   try {
                     Map<String, double> resultado = {};
@@ -142,17 +141,9 @@ class _SeriesVariablesScreen extends State<SeriesVariablesScreen> {
 
                     // Actualizar los campos de texto con los resultados
                     vpController.clear();
-                    vfsaController.clear();
-                    vpController.text = toCurrencyString(
-                      resultado["vp"]!.toStringAsFixed(2),
-                      thousandSeparator: ThousandSeparator.Comma,
-                      mantissaLength: 2,
-                    );
-                    vfsaController.text = toCurrencyString(
-                      resultado["vf"]!.toStringAsFixed(2),
-                      thousandSeparator: ThousandSeparator.Comma,
-                      mantissaLength: 2,
-                    );
+                    vfController.clear();
+                    vpController.text = formatCurrency(resultado["vp"]!);
+                    vfController.text = formatCurrency(resultado["vf"]!);
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

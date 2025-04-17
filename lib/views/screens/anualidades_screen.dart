@@ -1,8 +1,7 @@
 import 'package:finanpro_v2/controllers/anualidades_controller.dart';
+import 'package:finanpro_v2/controllers/text_formater.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import '../components/text_field.dart';
-import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
 class AnualidadesScreen extends StatefulWidget {
   const AnualidadesScreen({super.key});
@@ -98,32 +97,17 @@ class _AnualidadesScreenState extends State<AnualidadesScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  double capital =
-                      double.tryParse(
-                        toNumericString(capitalController.text),
-                      ) ??
-                      0;
-                  double i =
-                      double.tryParse(toNumericString(rateController.text)) ??
-                      0;
-                  int n =
-                      int.tryParse(toNumericString(periodController.text)) ?? 0;
+                  double capital = parseCurrency(capitalController.text);
+                  double i = parseCurrency(rateController.text);
+                  int n = parseCurrency(periodController.text).toInt();
                   try {
                     if (isFutureValue) {
-                      resultController.text = toCurrencyString(
-                        controller
-                            .calcularValorFinal(capital, i / 100, n)
-                            .toStringAsFixed(2),
-                        thousandSeparator: ThousandSeparator.Comma,
-                        mantissaLength: 2,
+                      resultController.text = formatCurrency(
+                        controller.calcularValorFinal(capital, i / 100, n),
                       );
                     } else if (isPresentValue) {
-                      resultController.text = toCurrencyString(
-                        controller
-                            .calcularValorActual(capital, i / 100, n)
-                            .toStringAsFixed(2),
-                        thousandSeparator: ThousandSeparator.Comma,
-                        mantissaLength: 2,
+                      resultController.text = formatCurrency(
+                        controller.calcularValorActual(capital, i / 100, n),
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(

@@ -1,4 +1,5 @@
 import 'package:finanpro_v2/controllers/interes_compuesto_controller.dart';
+import 'package:finanpro_v2/controllers/text_formater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import '../components/text_field.dart';
@@ -122,14 +123,10 @@ class _InteresCompuestoScreen extends State<InteresCompuestoScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  double capital =
-                      double.tryParse(
-                        toNumericString(capitalController.text),
-                      ) ??
-                      0;
-                  double rate =
-                      double.tryParse(toNumericString(rateController.text)) ??
-                      0;
+                  double capital = parseCurrency(capitalController.text);
+                  double rate = parseCurrency(rateController.text);
+                  double generated = parseCurrency(interesController.text);
+
                   int year =
                       int.tryParse(toNumericString(yearController.text)) ?? 0;
                   int month =
@@ -137,11 +134,7 @@ class _InteresCompuestoScreen extends State<InteresCompuestoScreen> {
                   int day =
                       int.tryParse(toNumericString(dayController.text)) ?? 0;
                   Tiempo duree = Tiempo(year, month, day);
-                  double generated =
-                      double.tryParse(
-                        toNumericString(interesController.text),
-                      ) ??
-                      0;
+
                   String type =
                       isAnnual
                           ? 'annual'
@@ -160,17 +153,13 @@ class _InteresCompuestoScreen extends State<InteresCompuestoScreen> {
                       );
                     }
                     if (capital == 0) {
-                      capitalController.text = toCurrencyString(
-                        logicController
-                            .calcularCapitalCompuesto(
-                              rate / 100,
-                              generated,
-                              duree,
-                              type,
-                            )
-                            .toStringAsFixed(2),
-                        thousandSeparator: ThousandSeparator.Comma,
-                        mantissaLength: 2,
+                      capitalController.text = formatCurrency(
+                        logicController.calcularCapitalCompuesto(
+                          rate / 100,
+                          generated,
+                          duree,
+                          type,
+                        ),
                       );
                     } else if (rate == 0) {
                       rateController.text = (logicController
@@ -193,17 +182,13 @@ class _InteresCompuestoScreen extends State<InteresCompuestoScreen> {
                       monthController.text = duree.months.toString();
                       dayController.text = duree.days.toString();
                     } else if (generated == 0) {
-                      interesController.text = toCurrencyString(
-                        logicController
-                            .calcularInteresCompuesto(
-                              capital,
-                              rate / 100,
-                              duree,
-                              type,
-                            )
-                            .toStringAsFixed(2),
-                        thousandSeparator: ThousandSeparator.Comma,
-                        mantissaLength: 2,
+                      interesController.text = formatCurrency(
+                        logicController.calcularInteresCompuesto(
+                          capital,
+                          rate / 100,
+                          duree,
+                          type,
+                        ),
                       );
                     }
                   } catch (e) {

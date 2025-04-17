@@ -1,7 +1,7 @@
 import 'package:finanpro_v2/controllers/gradientes_controller.dart';
+import 'package:finanpro_v2/controllers/text_formater.dart';
 import 'package:flutter/material.dart';
 import 'package:finanpro_v2/views/components/text_field.dart';
-import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
 class GradientesScreen extends StatefulWidget {
   const GradientesScreen({super.key});
@@ -17,7 +17,7 @@ class _GradientesScreen extends State<GradientesScreen> {
   TextEditingController periodoController = TextEditingController();
   TextEditingController tasaController = TextEditingController();
   TextEditingController vpController = TextEditingController();
-  TextEditingController vfsaController = TextEditingController();
+  TextEditingController vfController = TextEditingController();
 
   String tipoGradiente = 'Aritmético';
 
@@ -110,7 +110,7 @@ class _GradientesScreen extends State<GradientesScreen> {
               ),
               buildTextField(
                 "Valor Futuro (VF)",
-                vfsaController,
+                vfController,
                 isNumeric: true,
                 isMoney: true,
                 readOnly: false,
@@ -119,14 +119,8 @@ class _GradientesScreen extends State<GradientesScreen> {
               ElevatedButton(
                 onPressed: () {
                   // Lógica para calcular el gradiente
-                  double pagos =
-                      double.tryParse(toNumericString(pagosController.text)) ??
-                      0;
-                  double variacion =
-                      double.tryParse(
-                        toNumericString(variacionController.text),
-                      ) ??
-                      0;
+                  double pagos = parseCurrency(pagosController.text);
+                  double variacion = parseCurrency(variacionController.text);
                   variacion =
                       tipoGradiente == 'Aritmético'
                           ? variacion
@@ -164,17 +158,9 @@ class _GradientesScreen extends State<GradientesScreen> {
                     }
                     // Asignar los resultados a los controladores de texto
                     vpController.clear();
-                    vfsaController.clear();
-                    vpController.text = toCurrencyString(
-                      resultado["vp"]!.toStringAsFixed(2),
-                      thousandSeparator: ThousandSeparator.Comma,
-                      mantissaLength: 2,
-                    );
-                    vfsaController.text = toCurrencyString(
-                      resultado["vf"]!.toStringAsFixed(2),
-                      thousandSeparator: ThousandSeparator.Comma,
-                      mantissaLength: 2,
-                    );
+                    vfController.clear();
+                    vpController.text = formatCurrency(resultado["vp"]!);
+                    vfController.text = formatCurrency(resultado["vf"]!);
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

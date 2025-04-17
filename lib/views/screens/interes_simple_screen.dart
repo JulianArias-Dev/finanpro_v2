@@ -1,5 +1,6 @@
 import 'package:finanpro_v2/controllers/interes_simple_controller.dart';
 import 'package:finanpro_v2/models/tiempo.dart';
+import 'package:finanpro_v2/controllers/text_formater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import '../components/text_field.dart';
@@ -89,14 +90,10 @@ class InteresSimpleScreen extends StatelessWidget {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  double capital =
-                      double.tryParse(
-                        toNumericString(capitalController.text),
-                      ) ??
-                      0;
-                  double rate =
-                      double.tryParse(toNumericString(rateController.text)) ??
-                      0;
+                  double capital = parseCurrency(capitalController.text);
+                  double rate = parseCurrency(rateController.text);
+                  double generated = parseCurrency(interesController.text);
+
                   int year =
                       int.tryParse(toNumericString(yearController.text)) ?? 0;
                   int month =
@@ -104,29 +101,25 @@ class InteresSimpleScreen extends StatelessWidget {
                   int day =
                       int.tryParse(toNumericString(dayController.text)) ?? 0;
                   Tiempo duree = Tiempo(year, month, day);
-                  double generated =
-                      double.tryParse(
-                        toNumericString(interesController.text),
-                      ) ??
-                      0;
+
                   try {
                     if (capital == 0) {
-                      capitalController.text = toCurrencyString(
-                        logicController
-                            .calcularCapitalSimple(rate / 100, generated, duree)
-                            .toStringAsFixed(2),
-                        thousandSeparator: ThousandSeparator.Comma,
-                        mantissaLength: 2,
+                      capitalController.text = formatCurrency(
+                        logicController.calcularCapitalSimple(
+                          rate / 100,
+                          generated,
+                          duree,
+                        ),
                       );
                     } else if (rate == 0) {
-                      rateController.text = (logicController
-                                  .calcularTasaInteresSimple(
-                                    capital,
-                                    generated,
-                                    duree,
-                                  ) *
-                              100)
-                          .toStringAsFixed(2);
+                      double newrate =
+                          logicController.calcularTasaInteresSimple(
+                            capital,
+                            generated,
+                            duree,
+                          ) *
+                          100;
+                      rateController.text = newrate.toStringAsFixed(2);
                     } else if (duree.isEmpty()) {
                       duree = logicController.calcularTiempoInteresSimple(
                         capital,
@@ -137,12 +130,12 @@ class InteresSimpleScreen extends StatelessWidget {
                       monthController.text = duree.months.toString();
                       dayController.text = duree.days.toString();
                     } else if (generated == 0) {
-                      interesController.text = toCurrencyString(
-                        logicController
-                            .calculerInteretSimple(capital, rate / 100, duree)
-                            .toStringAsFixed(2),
-                        thousandSeparator: ThousandSeparator.Comma,
-                        mantissaLength: 2,
+                      interesController.text = formatCurrency(
+                        logicController.calculerInteretSimple(
+                          capital,
+                          rate / 100,
+                          duree,
+                        ),
                       );
                     }
                   } catch (e) {
