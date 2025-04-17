@@ -7,8 +7,8 @@ class AmortizacionController {
     //p = capital
     //r = tasa de interes
     //n = numero de meses
-    double r = i / 12; // tasa de interes mensual
-    double A = (p * r) / 1 - pow(1 + r, n);
+    double r = i; // tasa de interes mensual
+    double A = (p * r) / (1 - pow(1 + r, -n));
 
     return A; // cuota mensual
   }
