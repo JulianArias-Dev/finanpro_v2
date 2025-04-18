@@ -9,10 +9,11 @@ import 'package:finanpro_v2/views/screens/series_variables_screen.dart';
 import 'package:finanpro_v2/views/screens/tir_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:finanpro_v2/controllers/auth_controller.dart';
 
 class MyDrawer extends StatelessWidget {
-  const MyDrawer({super.key});
-
+  MyDrawer({super.key});
+  final AuthController authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -141,7 +142,7 @@ class MyDrawer extends StatelessWidget {
             leading: const Icon(Icons.logout),
             title: const Text('Cerrar sesión'),
             onTap: () {
-              Navigator.pop(context);
+              authController.signOut(); // Llamar al método de cerrar sesión
             },
           ),
         ],

@@ -1,5 +1,6 @@
 import 'package:finanpro_v2/controllers/gradientes_controller.dart';
 import 'package:finanpro_v2/controllers/text_formater.dart';
+import 'package:finanpro_v2/views/components/my_image.dart';
 import 'package:flutter/material.dart';
 import 'package:finanpro_v2/views/components/text_field.dart';
 
@@ -19,6 +20,11 @@ class _GradientesScreen extends State<GradientesScreen> {
   TextEditingController vpController = TextEditingController();
   TextEditingController vfController = TextEditingController();
 
+  Map<String, String> tipos = {
+    'Aritmético': 'GradienteAritmetico',
+    'Geométrico Creciente': 'GradGeoCreciente',
+    'Geométrico Decreciente': 'GradGeoDecreciente',
+  };
   String tipoGradiente = 'Aritmético';
 
   @override
@@ -46,7 +52,11 @@ class _GradientesScreen extends State<GradientesScreen> {
                 "Los gradientes son una forma de representar visualmente la variación de un valor a lo largo del tiempo. En el contexto financiero, los gradientes se utilizan para mostrar cómo cambian los flujos de efectivo a lo largo de un período.",
                 style: TextStyle(fontSize: 16),
               ),
-              const SizedBox(height: 20),
+              buildImage(
+                context,
+                'assets/formulas/${tipos[tipoGradiente]}.png',
+                0.40,
+              ),
 
               /// Combobox para tipo de gradiente
               DropdownButtonFormField<String>(
@@ -61,8 +71,12 @@ class _GradientesScreen extends State<GradientesScreen> {
                     child: Text('Aritmético'),
                   ),
                   DropdownMenuItem(
-                    value: 'Geométrico',
-                    child: Text('Geométrico'),
+                    value: 'Geométrico Creciente',
+                    child: Text('Geométrico Creciente'),
+                  ),
+                  DropdownMenuItem(
+                    value: 'Geométrico Decreciente',
+                    child: Text('Geométrico Decreciente'),
                   ),
                 ],
                 onChanged: (value) {
@@ -99,21 +113,6 @@ class _GradientesScreen extends State<GradientesScreen> {
                 "Tasa de interés (%)",
                 tasaController,
                 isNumeric: true,
-              ),
-              const SizedBox(height: 5),
-              buildTextField(
-                "Valor Presente (VP)",
-                vpController,
-                isNumeric: true,
-                isMoney: true,
-                readOnly: false,
-              ),
-              buildTextField(
-                "Valor Futuro (VF)",
-                vfController,
-                isNumeric: true,
-                isMoney: true,
-                readOnly: false,
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -177,6 +176,22 @@ class _GradientesScreen extends State<GradientesScreen> {
                 ),
                 child: const Text("Calcular"),
               ),
+              const SizedBox(height: 20),
+              buildTextField(
+                "Valor Presente (VP)",
+                vpController,
+                isNumeric: true,
+                isMoney: true,
+                readOnly: false,
+              ),
+              buildTextField(
+                "Valor Futuro (VF)",
+                vfController,
+                isNumeric: true,
+                isMoney: true,
+                readOnly: false,
+              ),
+              const SizedBox(height: 10),
             ],
           ),
         ),

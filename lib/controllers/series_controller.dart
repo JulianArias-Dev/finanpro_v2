@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:finanpro_v2/controllers/validations.dart';
 
 class SeriesVariablesController {
   SeriesVariablesController();
@@ -9,11 +10,11 @@ class SeriesVariablesController {
     int n = 0,
     double i = 0,
   }) {
-    if (g == 0 || A <= 0 || n <= 0 || i <= 0) {
-      throw ArgumentError(
-        "Todos los argumentos deben ser mayores que cero, y la variacion debe ser diferente de cero.",
-      );
-    }
+    // Validar argumentos
+    validarMayorQueCero(A, 'Valor Anualidad (A)');
+    validarMayorIgualCero(g, 'Tasa de crecimiento (g)');
+    validarMayorQueCero(n, 'Número de períodos (n)');
+    validarMayorQueCero(i, 'Tasa de interés (i)');
     // A: Valor Anualidad
     // g: Tasa de crecimiento (puede ser positiva o negativa)
     // n: Número de períodos
@@ -42,11 +43,12 @@ class SeriesVariablesController {
     int n = 0,
     double i = 0,
   }) {
-    if (g == 0 || A <= 0 || n <= 0 || i <= 0) {
-      throw ArgumentError(
-        "Todos los argumentos deben ser mayores que cero, y la variacion debe ser diferente de cero.",
-      );
-    }
+    // Validar argumentos
+    validarMayorQueCero(A, 'Valor Anualidad (A)');
+    validarMayorIgualCero(g, 'Tasa de crecimiento (g)');
+    validarMayorQueCero(n, 'Número de períodos (n)');
+    validarMayorQueCero(i, 'Tasa de interés (i)');
+
     // A: Valor Anualidad
     // g: Tasa de crecimiento (puede ser positiva o negativa)
     // n: Número de períodos

@@ -1,5 +1,6 @@
 import 'package:finanpro_v2/controllers/interes_compuesto_controller.dart';
 import 'package:finanpro_v2/controllers/text_formater.dart';
+import 'package:finanpro_v2/views/components/my_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import '../components/text_field.dart';
@@ -49,7 +50,7 @@ class _InteresCompuestoScreen extends State<InteresCompuestoScreen> {
                 "Es aquel que se va sumando al capital inicial y sobre el que se van generando nuevos intereses. El dinero, en este caso, tiene un efecto multiplicador porque los intereses producen nuevos intereses.",
                 style: TextStyle(fontSize: 16),
               ),
-              const SizedBox(height: 20),
+              buildImage(context, 'assets/formulas/InteresCompuesto.png', 0.3),
               const Text('Capitalización:'),
               Row(
                 children: [

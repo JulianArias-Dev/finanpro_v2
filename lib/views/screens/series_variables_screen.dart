@@ -1,5 +1,6 @@
 import 'package:finanpro_v2/controllers/series_controller.dart';
 import 'package:finanpro_v2/controllers/text_formater.dart';
+import 'package:finanpro_v2/views/components/my_image.dart';
 import 'package:finanpro_v2/views/components/text_field.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,10 @@ class _SeriesVariablesScreen extends State<SeriesVariablesScreen> {
   TextEditingController vpController = TextEditingController();
   TextEditingController vfController = TextEditingController();
 
+  Map<String, String> tipos = {
+    'Lineal': 'SerieLineal',
+    'Geométrico': 'SerieGeometrica',
+  };
   String tipoGradiente = 'Lineal';
 
   @override
@@ -45,6 +50,11 @@ class _SeriesVariablesScreen extends State<SeriesVariablesScreen> {
               const Text(
                 "Aquí puedes calcular el valor futuro o presente de una serie de variables.",
                 style: TextStyle(fontSize: 16),
+              ),
+              buildImage(
+                context,
+                'assets/formulas/${tipos[tipoGradiente]}.png',
+                0.4,
               ),
 
               /// Combobox para tipo de gradiente
@@ -92,21 +102,6 @@ class _SeriesVariablesScreen extends State<SeriesVariablesScreen> {
                 "Tasa de interés (%)",
                 tasaController,
                 isNumeric: true,
-              ),
-              const SizedBox(height: 5),
-              buildTextField(
-                "Valor Presente (VP)",
-                vpController,
-                isNumeric: true,
-                isMoney: true,
-                readOnly: true,
-              ),
-              buildTextField(
-                "Valor Futuro (VF)",
-                vfController,
-                isNumeric: true,
-                isMoney: true,
-                readOnly: true,
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -159,6 +154,21 @@ class _SeriesVariablesScreen extends State<SeriesVariablesScreen> {
                   foregroundColor: Colors.white, // Text color
                 ),
                 child: const Text("Calcular"),
+              ),
+              const SizedBox(height: 10),
+              buildTextField(
+                "Valor Presente (VP)",
+                vpController,
+                isNumeric: true,
+                isMoney: true,
+                readOnly: true,
+              ),
+              buildTextField(
+                "Valor Futuro (VF)",
+                vfController,
+                isNumeric: true,
+                isMoney: true,
+                readOnly: true,
               ),
             ],
           ),

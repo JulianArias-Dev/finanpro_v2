@@ -1,6 +1,7 @@
 import 'package:finanpro_v2/controllers/amortizacion_controller.dart';
 import 'package:finanpro_v2/controllers/text_formater.dart';
 import 'package:finanpro_v2/views/components/text_field.dart';
+import 'package:finanpro_v2/views/components/my_image.dart';
 import 'package:flutter/material.dart';
 
 class AmortizacionScreen extends StatefulWidget {
@@ -17,6 +18,11 @@ class _AmortizacionScreen extends State<AmortizacionScreen> {
   TextEditingController tasaInteresController = TextEditingController();
   TextEditingController cuotaController = TextEditingController();
   String detailtxt = '';
+  Map<String, String> tipos = {
+    'Francesa': 'AmFrancesa',
+    'Alemana': 'AmAlemana',
+    'Americana': 'AmAmericana',
+  };
   String tipoAmortizacion = 'Francesa';
   List<Map<String, dynamic>> tablaAmortizacion = [];
 
@@ -45,7 +51,11 @@ class _AmortizacionScreen extends State<AmortizacionScreen> {
                 "Es el proceso de pagar una deuda a través de pagos regulares y programados. En cada pago se abona una parte del capital y otra parte de los intereses generados.",
                 style: TextStyle(fontSize: 16),
               ),
-              const SizedBox(height: 20),
+              buildImage(
+                context,
+                'assets/formulas/${tipos[tipoAmortizacion]}.png',
+                0.35,
+              ),
               DropdownButtonFormField<String>(
                 value: tipoAmortizacion,
                 decoration: const InputDecoration(

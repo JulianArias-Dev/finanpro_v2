@@ -1,3 +1,4 @@
+import 'package:finanpro_v2/controllers/validations.dart';
 import '../models/tiempo.dart';
 import 'dart:math';
 
@@ -10,12 +11,16 @@ class InteresCompuestoController {
     Tiempo duree,
     String type,
   ) {
-    _validateArguments(
-      capital <= 0,
-      interes <= 0,
-      duree.isEmpty(),
-      type.isEmpty,
-    );
+    // Validar argumentos
+    validarMayorQueCero(capital, 'Capital inicial');
+    validarMayorQueCero(interes, 'Tasa de interés');
+    validarMayorIgualCero(duree.years, 'Años');
+    validarMayorIgualCero(duree.months, 'Meses');
+    validarMayorIgualCero(duree.days, 'Días');
+    if (type.isEmpty) {
+      throw ArgumentError("El tipo de capiptalización no debe estar vacío.");
+    }
+
     switch (type) {
       case 'monthly':
         int cicles = duree.years * 12 + duree.months;
@@ -33,13 +38,14 @@ class InteresCompuestoController {
     Tiempo duree,
     String type,
   ) {
-    if (capital <= 0 ||
-        generatedInteres <= 0 ||
-        duree.isEmpty() ||
-        type.isEmpty) {
-      throw ArgumentError(
-        "Todos los argumentos deben ser mayores que cero y el tipo no debe estar vacío.",
-      );
+    // Validar argumentos
+    validarMayorQueCero(capital, 'Capital inicial');
+    validarMayorQueCero(generatedInteres, 'Interés generado');
+    validarMayorIgualCero(duree.years, 'Años');
+    validarMayorIgualCero(duree.months, 'Meses');
+    validarMayorIgualCero(duree.days, 'Días');
+    if (type.isEmpty) {
+      throw ArgumentError("El tipo de capiptalización no debe estar vacío.");
     }
     int cicles;
     switch (type) {
@@ -61,10 +67,14 @@ class InteresCompuestoController {
     Tiempo duree,
     String type,
   ) {
-    if (interes <= 0 || interes <= 0 || duree.isEmpty() || type.isEmpty) {
-      throw ArgumentError(
-        "Todos los argumentos deben ser mayores que cero y el tipo no debe estar vacío.",
-      );
+    // Validar argumentos
+    validarMayorQueCero(interes, 'Tasa de interés');
+    validarMayorQueCero(generatedInteres, 'Interés generado');
+    validarMayorIgualCero(duree.years, 'Años');
+    validarMayorIgualCero(duree.months, 'Meses');
+    validarMayorIgualCero(duree.days, 'Días');
+    if (type.isEmpty) {
+      throw ArgumentError("El tipo de capiptalización no debe estar vacío.");
     }
     int cicles;
     switch (type) {
@@ -86,15 +96,13 @@ class InteresCompuestoController {
     double montoCompuesto,
     String type,
   ) {
-    if (capital <= 0 ||
-        interes <= 0 ||
-        montoCompuesto <= capital ||
-        type.isEmpty) {
-      throw ArgumentError(
-        "Todos los argumentos deben ser positivos y el monto compuesto debe ser mayor que el capital.",
-      );
+    // Validar argumentos
+    validarMayorQueCero(capital, 'Capital inicial');
+    validarMayorQueCero(interes, 'Tasa de interés');
+    validarMayorQueCero(montoCompuesto, 'Monto compuesto');
+    if (type.isEmpty) {
+      throw ArgumentError("El tipo de capiptalización no debe estar vacío.");
     }
-
     double cicles = (log(montoCompuesto) - log(capital)) / log(1 + interes);
 
     switch (type) {
@@ -107,14 +115,6 @@ class InteresCompuestoController {
         return Tiempo(cicles.floor(), 0, 0);
       default:
         throw ArgumentError("Tipo no válido. Debe ser 'monthly' o 'annual'.");
-    }
-  }
-
-  void _validateArguments(bool one, bool two, bool three, bool four) {
-    if (one || two || three || four) {
-      throw ArgumentError(
-        "Todos los argumentos deben ser mayores que cero y el tipo no debe estar vacío.",
-      );
     }
   }
 }
