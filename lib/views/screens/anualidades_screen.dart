@@ -1,5 +1,6 @@
 import 'package:finanpro_v2/controllers/anualidades_controller.dart';
 import 'package:finanpro_v2/controllers/text_formater.dart';
+import 'package:finanpro_v2/views/components/my_image.dart';
 import 'package:flutter/material.dart';
 import '../components/text_field.dart';
 
@@ -45,43 +46,7 @@ class _AnualidadesScreenState extends State<AnualidadesScreen> {
                 "Las anualidades son pagos periódicos iguales que no necesariamente tienen que ser anuales como lo indica su nombre; un ejemplo de este tipo de pagos son las pensiones, seguros, deudas pactadas con abonos iguales, etc.",
                 style: TextStyle(fontSize: 16),
               ),
-              const SizedBox(height: 10),
-              Container(
-                width: double.infinity,
-                constraints: BoxConstraints(
-                  maxHeight:
-                      MediaQuery.of(context).size.height *
-                      0.3, // 30% de alto pantalla
-                ),
-                child: Image.asset(
-                  'assets/formulas/Anualidades.png',
-                  fit: BoxFit.contain,
-                ),
-              ),
-              const SizedBox(height: 20),
-              buildTextField(
-                "Capital (\$)",
-                capitalController,
-                isNumeric: true,
-                isMoney: true,
-              ),
-              buildTextField(
-                "Tasa de anualidad (%)",
-                rateController,
-                isNumeric: true,
-              ),
-              buildTextField(
-                "Periodos de Capitalizacion",
-                periodController,
-                isNumeric: true,
-              ),
-              buildTextField(
-                "Valor Final/Actual (\$)",
-                resultController,
-                isNumeric: true,
-                isMoney: true,
-              ),
-              const SizedBox(height: 20),
+              buildImage(context, 'assets/formulas/Anualidades.png', 0.3),
               Row(
                 children: [
                   Checkbox(
@@ -106,6 +71,22 @@ class _AnualidadesScreenState extends State<AnualidadesScreen> {
                   ),
                   const Text("Valor Final"),
                 ],
+              ),
+              buildTextField(
+                "Capital (\$)",
+                capitalController,
+                isNumeric: true,
+                isMoney: true,
+              ),
+              buildTextField(
+                "Tasa de anualidad (%)",
+                rateController,
+                isNumeric: true,
+              ),
+              buildTextField(
+                "Periodos de Capitalizacion",
+                periodController,
+                isNumeric: true,
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -147,6 +128,13 @@ class _AnualidadesScreenState extends State<AnualidadesScreen> {
                   foregroundColor: Colors.white, // Text color
                 ),
                 child: const Text("Calcular", style: TextStyle(fontSize: 20)),
+              ),
+              buildTextField(
+                "Valor Final/Actual (\$)",
+                resultController,
+                isNumeric: true,
+                isMoney: true,
+                readOnly: true,
               ),
             ],
           ),

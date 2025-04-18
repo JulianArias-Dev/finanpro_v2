@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:finanpro_v2/controllers/validations.dart';
 
 class GradientesController {
   GradientesController();
@@ -9,11 +10,12 @@ class GradientesController {
     int n = 0,
     double i = 0,
   }) {
-    if (g == 0 || A <= 0 || n <= 0 || i <= 0) {
-      throw ArgumentError(
-        "Todos los argumentos deben ser mayores que cero, y la variacion debe ser diferente de cero.",
-      );
-    }
+    // Validar argumentos
+    validarDiferenteDeCero(g, 'Variación (g)');
+    validarMayorQueCero(A, 'Aporte (A)');
+    validarMayorQueCero(n, 'Número de periodos (n)');
+    validarMayorQueCero(i, 'Tasa de interés (i)');
+
     double vp =
         (A * (1 - pow(1 / (1 + i), n)) / i) +
         (g / i) * ((1 - pow(1 / (1 + i), n)) / i - n / pow(1 + i, n));
@@ -32,9 +34,12 @@ class GradientesController {
     int n = 0,
     double i = 0,
   }) {
-    if (g <= 0 || A <= 0 || n <= 0 || i <= 0) {
-      throw ArgumentError("Todos los argumentos deben ser mayores que cero.");
-    }
+    // Validar Argumentos
+    validarMayorQueCero(g, 'Variación (g)');
+    validarMayorQueCero(A, 'Aporte (A)');
+    validarMayorQueCero(n, 'Número de periodos (n)');
+    validarMayorQueCero(i, 'Tasa de interés (i)');
+
     double vp = 0;
     if (i != g) {
       // Valor Presente (VP)
@@ -56,11 +61,12 @@ class GradientesController {
     int n = 0,
     double i = 0,
   }) {
-    if (g >= 0 || A <= 0 || n <= 0 || i <= 0) {
-      throw ArgumentError(
-        "Todos los argumentos deben ser mayores que cero, y la variacion debe ser menor que cero.",
-      );
-    }
+    // Validar Argumentos
+    validarMayorQueCero(g, 'Variación (g)');
+    validarMayorQueCero(A, 'Aporte (A)');
+    validarMayorQueCero(n, 'Número de periodos (n)');
+    validarMayorQueCero(i, 'Tasa de interés (i)');
+
     double vp = 0;
     if (i != g) {
       // Valor Presente (VP)

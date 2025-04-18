@@ -1,3 +1,4 @@
+import 'package:finanpro_v2/views/components/my_image.dart';
 import 'package:flutter/material.dart';
 import 'package:finanpro_v2/controllers/capitalizacion_controller.dart';
 import 'package:finanpro_v2/views/components/text_field.dart';
@@ -57,20 +58,11 @@ class _CapitalizacionScreenState extends State<CapitalizacionScreen> {
               "La capitalización es el proceso mediante el cual se acumulan intereses sobre un capital inicial, generando un crecimiento exponencial del mismo a lo largo del tiempo.",
               style: TextStyle(fontSize: 16),
             ),
-            const SizedBox(height: 10),
-            Container(
-              width: double.infinity,
-              constraints: BoxConstraints(
-                maxHeight:
-                    MediaQuery.of(context).size.height *
-                    0.3, // 30% de alto pantalla
-              ),
-              child: Image.asset(
-                'assets/formulas/${tipos[tipoCapitalizacion]}.png',
-                fit: BoxFit.contain,
-              ),
+            buildImage(
+              context,
+              'assets/formulas/${tipos[tipoCapitalizacion]}.png',
+              0.3,
             ),
-            const SizedBox(height: 20),
             DropdownButtonFormField<String>(
               value: tipoCapitalizacion,
               decoration: const InputDecoration(
@@ -84,7 +76,7 @@ class _CapitalizacionScreenState extends State<CapitalizacionScreen> {
                 ),
                 DropdownMenuItem(
                   value: 'Individual con aportes',
-                  child: Text('Individual con aportes'),
+                  child: Text('Individual con aportes Periódicos'),
                 ),
                 DropdownMenuItem(value: 'Colectiva', child: Text('Colectiva')),
               ],

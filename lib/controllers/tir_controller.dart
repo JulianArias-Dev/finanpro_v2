@@ -1,14 +1,26 @@
 import 'dart:math';
+import 'package:finanpro_v2/controllers/validations.dart';
 
 class TirController {
   TirController();
 
   double calcularTIR(
     List<double> flujos, {
-    double estimacionInicial = 0.1,
-    double tolerancia = 1e-6,
-    int maxIteraciones = 1000,
+    double estimacionInicial = 0.05,
+    double tolerancia = 1e-2,
+    int maxIteraciones = 1200,
   }) {
+    // Validar Argumentos
+    validarMayorQueCero(estimacionInicial, 'Estimación inicial');
+    validarMayorIgualCero(tolerancia, 'Tolerancia');
+    validarMayorQueCero(maxIteraciones, 'Máximo de iteraciones');
+    if (flujos.isEmpty) {
+      throw ArgumentError('La lista de flujos no debe estar vacía.');
+    }
+    for (int i = 0; i < flujos.length; i++) {
+      validarMayorIgualCero(flujos[i], 'Flujo de caja en posición $i');
+    }
+
     double tir = estimacionInicial;
 
     for (int i = 0; i < maxIteraciones; i++) {

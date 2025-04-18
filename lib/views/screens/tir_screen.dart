@@ -1,4 +1,5 @@
 import 'package:finanpro_v2/controllers/text_formater.dart';
+import 'package:finanpro_v2/views/components/my_image.dart';
 import 'package:finanpro_v2/views/components/text_field.dart';
 import 'package:finanpro_v2/controllers/tir_controller.dart';
 import 'package:flutter/material.dart';
@@ -41,20 +42,7 @@ class _TirScreen extends State<TirScreen> {
                 "La TIR es una métrica utilizada para evaluar la rentabilidad de una inversión. Representa la tasa de descuento que hace que el VPN sea igual a cero.",
                 style: TextStyle(fontSize: 16),
               ),
-              const SizedBox(height: 10),
-              Container(
-                width: double.infinity,
-                constraints: BoxConstraints(
-                  maxHeight:
-                      MediaQuery.of(context).size.height *
-                      0.3, // 30% de alto pantalla
-                ),
-                child: Image.asset(
-                  'assets/formulas/TIR.png',
-                  fit: BoxFit.contain,
-                ),
-              ),
-              const SizedBox(height: 20),
+              buildImage(context, 'assets/formulas/TIR.png', 0.25),
               buildTextField(
                 'Inversión Inicial (\$)',
                 inversionController,
