@@ -45,6 +45,19 @@ class _AnualidadesScreenState extends State<AnualidadesScreen> {
                 "Las anualidades son pagos periódicos iguales que no necesariamente tienen que ser anuales como lo indica su nombre; un ejemplo de este tipo de pagos son las pensiones, seguros, deudas pactadas con abonos iguales, etc.",
                 style: TextStyle(fontSize: 16),
               ),
+              const SizedBox(height: 10),
+              Container(
+                width: double.infinity,
+                constraints: BoxConstraints(
+                  maxHeight:
+                      MediaQuery.of(context).size.height *
+                      0.3, // 30% de alto pantalla
+                ),
+                child: Image.asset(
+                  'assets/formulas/Anualidades.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
               const SizedBox(height: 20),
               buildTextField(
                 "Capital (\$)",

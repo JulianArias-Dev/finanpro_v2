@@ -49,6 +49,19 @@ class _InteresCompuestoScreen extends State<InteresCompuestoScreen> {
                 "Es aquel que se va sumando al capital inicial y sobre el que se van generando nuevos intereses. El dinero, en este caso, tiene un efecto multiplicador porque los intereses producen nuevos intereses.",
                 style: TextStyle(fontSize: 16),
               ),
+              const SizedBox(height: 10),
+              Container(
+                width: double.infinity,
+                constraints: BoxConstraints(
+                  maxHeight:
+                      MediaQuery.of(context).size.height *
+                      0.3, // 30% de alto pantalla
+                ),
+                child: Image.asset(
+                  'assets/formulas/InteresCompuesto.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
               const SizedBox(height: 20),
               const Text('Capitalización:'),
               Row(

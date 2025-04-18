@@ -42,6 +42,19 @@ class InteresSimpleScreen extends StatelessWidget {
                 "El interés simple se genera sobre un capital inicial con una tasa fija sobre el saldo original de la inversión o préstamo.",
                 style: TextStyle(fontSize: 16),
               ),
+              const SizedBox(height: 10),
+              Container(
+                width: double.infinity,
+                constraints: BoxConstraints(
+                  maxHeight:
+                      MediaQuery.of(context).size.height *
+                      0.3, // 30% de alto pantalla
+                ),
+                child: Image.asset(
+                  'assets/formulas/InteresSimple.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
               const SizedBox(height: 20),
               buildTextField(
                 "Capital (\$)",

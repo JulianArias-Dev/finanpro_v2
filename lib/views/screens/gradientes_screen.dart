@@ -19,6 +19,11 @@ class _GradientesScreen extends State<GradientesScreen> {
   TextEditingController vpController = TextEditingController();
   TextEditingController vfController = TextEditingController();
 
+  Map<String, String> tipos = {
+    'Aritmético': 'GradienteAritmetico',
+    'Geométrico Creciente': 'GradGeoCreciente',
+    'Geométrico Decreciente': 'GradGeoDecreciente',
+  };
   String tipoGradiente = 'Aritmético';
 
   @override
@@ -46,6 +51,19 @@ class _GradientesScreen extends State<GradientesScreen> {
                 "Los gradientes son una forma de representar visualmente la variación de un valor a lo largo del tiempo. En el contexto financiero, los gradientes se utilizan para mostrar cómo cambian los flujos de efectivo a lo largo de un período.",
                 style: TextStyle(fontSize: 16),
               ),
+              const SizedBox(height: 10),
+              Container(
+                width: double.infinity,
+                constraints: BoxConstraints(
+                  maxHeight:
+                      MediaQuery.of(context).size.height *
+                      0.3, // 30% de alto pantalla
+                ),
+                child: Image.asset(
+                  'assets/formulas/${tipos[tipoGradiente]}.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
               const SizedBox(height: 20),
 
               /// Combobox para tipo de gradiente
@@ -61,8 +79,12 @@ class _GradientesScreen extends State<GradientesScreen> {
                     child: Text('Aritmético'),
                   ),
                   DropdownMenuItem(
-                    value: 'Geométrico',
-                    child: Text('Geométrico'),
+                    value: 'Geométrico Creciente',
+                    child: Text('Geométrico Creciente'),
+                  ),
+                  DropdownMenuItem(
+                    value: 'Geométrico Decreciente',
+                    child: Text('Geométrico Decreciente'),
                   ),
                 ],
                 onChanged: (value) {

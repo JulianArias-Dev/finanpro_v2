@@ -19,6 +19,10 @@ class _SeriesVariablesScreen extends State<SeriesVariablesScreen> {
   TextEditingController vpController = TextEditingController();
   TextEditingController vfController = TextEditingController();
 
+  Map<String, String> tipos = {
+    'Lineal': 'SerieLineal',
+    'Geométrico': 'SerieGeometrica',
+  };
   String tipoGradiente = 'Lineal';
 
   @override
@@ -46,6 +50,20 @@ class _SeriesVariablesScreen extends State<SeriesVariablesScreen> {
                 "Aquí puedes calcular el valor futuro o presente de una serie de variables.",
                 style: TextStyle(fontSize: 16),
               ),
+              const SizedBox(height: 10),
+              Container(
+                width: double.infinity,
+                constraints: BoxConstraints(
+                  maxHeight:
+                      MediaQuery.of(context).size.height *
+                      0.3, // 30% de alto pantalla
+                ),
+                child: Image.asset(
+                  'assets/formulas/${tipos[tipoGradiente]}.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
+              const SizedBox(height: 20),
 
               /// Combobox para tipo de gradiente
               DropdownButtonFormField<String>(

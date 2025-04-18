@@ -17,6 +17,11 @@ class _AmortizacionScreen extends State<AmortizacionScreen> {
   TextEditingController tasaInteresController = TextEditingController();
   TextEditingController cuotaController = TextEditingController();
   String detailtxt = '';
+  Map<String, String> tipos = {
+    'Francesa': 'AmFrancesa',
+    'Alemana': 'AmAlemana',
+    'Americana': 'AmAmericana',
+  };
   String tipoAmortizacion = 'Francesa';
   List<Map<String, dynamic>> tablaAmortizacion = [];
 
@@ -44,6 +49,19 @@ class _AmortizacionScreen extends State<AmortizacionScreen> {
               const Text(
                 "Es el proceso de pagar una deuda a través de pagos regulares y programados. En cada pago se abona una parte del capital y otra parte de los intereses generados.",
                 style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                width: double.infinity,
+                constraints: BoxConstraints(
+                  maxHeight:
+                      MediaQuery.of(context).size.height *
+                      0.3, // 30% de alto pantalla
+                ),
+                child: Image.asset(
+                  'assets/formulas/${tipos[tipoAmortizacion]}.png',
+                  fit: BoxFit.contain,
+                ),
               ),
               const SizedBox(height: 20),
               DropdownButtonFormField<String>(
