@@ -123,15 +123,15 @@ class _LoginScreenState extends State<LoginScreen> {
               children: List.generate(6, (index) {
                 return Container(
                   margin: const EdgeInsets.symmetric(horizontal: 8),
-                  width: 45,
-                  height: 50,
+                  width: 35,
+                  height: 40,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Center(
                     child: Text(
-                      index < pin.length ? "●" : "",
+                      index < pin.length ? "*" : "",
                       style: const TextStyle(fontSize: 28, color: Colors.black),
                     ),
                   ),
@@ -177,6 +177,7 @@ class CedulaController extends GetxController {
 
   void setCedula(String value) {
     cedula.value = value;
+    storage.write('documentNumber', value);
   }
 
   void loadStoredCedula() {

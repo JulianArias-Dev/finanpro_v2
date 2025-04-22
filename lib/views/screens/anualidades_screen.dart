@@ -88,7 +88,7 @@ class _AnualidadesScreenState extends State<AnualidadesScreen> {
                 periodController,
                 isNumeric: true,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () {
                   double capital = parseCurrency(capitalController.text);
@@ -129,6 +129,7 @@ class _AnualidadesScreenState extends State<AnualidadesScreen> {
                 ),
                 child: const Text("Calcular", style: TextStyle(fontSize: 20)),
               ),
+              const SizedBox(height: 10),
               buildTextField(
                 "Valor Final/Actual (\$)",
                 resultController,

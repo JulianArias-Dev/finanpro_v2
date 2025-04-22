@@ -106,7 +106,7 @@ class RegisterScreen extends StatelessWidget {
                   if (password.length > 6) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("La contraseña debe ser de 4 dígitos"),
+                        content: Text("La contraseña debe ser de 6 dígitos"),
                         backgroundColor: Colors.red,
                       ),
                     );

@@ -1,3 +1,4 @@
+import 'package:finanpro_v2/controllers/text_formater.dart';
 import 'package:finanpro_v2/views/screens/amortizacion_screen.dart';
 import 'package:finanpro_v2/views/screens/anualidades_screen.dart';
 import 'package:finanpro_v2/views/screens/capitalizacion_screen.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:finanpro_v2/controllers/auth_controller.dart';
 import 'package:finanpro_v2/views/components/my_drawer.dart';
+import 'package:finanpro_v2/views/components/option_button.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -54,7 +56,7 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     const SizedBox(height: 35),
                     Text(
-                      "Bienvenido ${user.firstName} ${user.firstLastName}",
+                      "Bienvenido, ${user.firstName} ${user.firstLastName}",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 22,
@@ -67,7 +69,7 @@ class HomeScreen extends StatelessWidget {
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                     Text(
-                      "\$ ${user.amount.toStringAsFixed(2)}",
+                      "\$ ${formatCurrency(user.amount)}",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 26,
@@ -104,42 +106,42 @@ class HomeScreen extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          _buildOptionButton(
+                          buildOptionButton(
                             "Interés Simple",
                             context,
                             const InteresSimpleScreen(),
                           ),
-                          _buildOptionButton(
+                          buildOptionButton(
                             "Interés Compuesto",
                             context,
                             const InteresCompuestoScreen(),
                           ),
-                          _buildOptionButton(
+                          buildOptionButton(
                             "Anualidades",
                             context,
                             const AnualidadesScreen(),
                           ),
-                          _buildOptionButton(
+                          buildOptionButton(
                             "Gradientes",
                             context,
                             const GradientesScreen(),
                           ),
-                          _buildOptionButton(
+                          buildOptionButton(
                             "Series Variables",
                             context,
                             const SeriesVariablesScreen(),
                           ),
-                          _buildOptionButton(
+                          buildOptionButton(
                             "Sistemas de Amortización",
                             context,
                             const AmortizacionScreen(),
                           ),
-                          _buildOptionButton(
+                          buildOptionButton(
                             "Sistemas de Capitalización",
                             context,
                             const CapitalizacionScreen(),
                           ),
-                          _buildOptionButton("TIR", context, const TirScreen()),
+                          buildOptionButton("TIR", context, const TirScreen()),
                         ],
                       ),
                     ),
@@ -172,13 +174,13 @@ class HomeScreen extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          _buildOptionButton("Nuevo Préstamo", context, null),
-                          _buildOptionButton(
+                          buildOptionButton("Nuevo Préstamo", context, null),
+                          buildOptionButton(
                             "Préstamos Vigentes",
                             context,
                             null,
                           ),
-                          _buildOptionButton("Pagar Préstamo", context, null),
+                          buildOptionButton("Pagar Préstamo", context, null),
                         ],
                       ),
                     ),
@@ -190,40 +192,5 @@ class HomeScreen extends StatelessWidget {
         ),
       );
     });
-  }
-
-  Widget _buildOptionButton(String title, BuildContext context, Widget? page) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-      child: ElevatedButton(
-        onPressed:
-            page != null
-                ? () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => page),
-                )
-                : null,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 25),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-            side: const BorderSide(
-              color: Color.fromARGB(255, 111, 183, 31),
-              width: 3,
-            ),
-          ),
-          minimumSize: const Size(130, 95),
-        ),
-        child: SizedBox(
-          width: 95, // Set a fixed width to wrap text
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 14),
-          ),
-        ),
-      ),
-    );
   }
 }

@@ -14,6 +14,7 @@ import 'package:finanpro_v2/controllers/auth_controller.dart';
 class MyDrawer extends StatelessWidget {
   MyDrawer({super.key});
   final AuthController authController = Get.find<AuthController>();
+  final ThemeController themeController = Get.find<ThemeController>();
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -116,7 +117,7 @@ class MyDrawer extends StatelessWidget {
                 leading: const Icon(Icons.dark_mode),
                 title: const Text('Modo Oscuro'),
                 onTap: () {
-                  Get.find<ThemeController>().setDarkMode();
+                  themeController.setDarkMode();
                   Navigator.pop(context);
                 },
               ),
@@ -124,7 +125,7 @@ class MyDrawer extends StatelessWidget {
                 leading: const Icon(Icons.light_mode),
                 title: const Text('Modo Claro'),
                 onTap: () {
-                  Get.find<ThemeController>().setLightMode();
+                  themeController.setLightMode();
                   Navigator.pop(context);
                 },
               ),

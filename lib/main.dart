@@ -5,13 +5,16 @@ import 'package:get_storage/get_storage.dart';
 import 'firebase_options.dart';
 import 'views/start_screen.dart';
 import 'views/components/theme_controller.dart';
+import 'package:finanpro_v2/controllers/auth_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await GetStorage.init(); // Inicializar almacenamiento local
 
-  runApp(MyApp());
+  Get.put(AuthController());
+  Get.put(ThemeController());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

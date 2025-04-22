@@ -16,7 +16,6 @@ class _AmortizacionScreen extends State<AmortizacionScreen> {
   TextEditingController capitalCcontroller = TextEditingController();
   TextEditingController periodosController = TextEditingController();
   TextEditingController tasaInteresController = TextEditingController();
-  TextEditingController cuotaController = TextEditingController();
   String detailtxt = '';
   Map<String, String> tipos = {
     'Francesa': 'AmFrancesa',
@@ -103,19 +102,6 @@ class _AmortizacionScreen extends State<AmortizacionScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 5),
-              tipoAmortizacion == 'Francesa' || tipoAmortizacion == 'Americana'
-                  ? buildTextField(
-                    'Cuotas Fijas',
-                    cuotaController,
-                    isNumeric: true,
-                    isMoney: true,
-                  )
-                  : Container(),
-              Text(
-                detailtxt,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
               const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () {
@@ -125,29 +111,22 @@ class _AmortizacionScreen extends State<AmortizacionScreen> {
                   int periodos = int.parse(periodosController.text);
 
                   setState(() {
+                    tablaAmortizacion = []; // Limpia
                     switch (tipoAmortizacion) {
                       case 'Francesa':
-                        double cuota = logicController.francesa(
+                        tablaAmortizacion = logicController.francesa(
                           capital,
                           tasaInteres,
                           periodos,
                         );
-                        cuotaController.text = formatCurrency(cuota);
-                        detailtxt =
-                            'Usted pagará \$${formatCurrency(cuota)} durante $periodos meses.';
-                        tablaAmortizacion = []; // Limpia
                         break;
 
                       case 'Americana':
-                        double cuotaInteres = logicController.americana(
+                        tablaAmortizacion = logicController.americana(
                           capital,
                           tasaInteres,
                           periodos,
                         );
-                        cuotaController.text = formatCurrency(cuotaInteres);
-                        detailtxt =
-                            'Usted pagará \$${formatCurrency(cuotaInteres)} de interés, durante ${periodos - 1} meses.\n El último mes pagará el capital + intereses \$${formatCurrency(capital + cuotaInteres)}.';
-                        tablaAmortizacion = []; // Limpia
                         break;
 
                       case 'Alemana':
@@ -168,45 +147,42 @@ class _AmortizacionScreen extends State<AmortizacionScreen> {
                 child: const Text("Calcular"),
               ),
               const SizedBox(height: 20),
-              tipoAmortizacion == 'Alemana'
-                  ? const Text(
-                    "Deslize hacia la izquierda para ver la tabla...",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  )
-                  : Container(),
-              const SizedBox(height: 10),
               if (tablaAmortizacion.isNotEmpty)
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    columns: const [
-                      DataColumn(label: Text("Periodo")),
-                      DataColumn(label: Text("Cuota")),
-                      DataColumn(label: Text("Pago de Interés")),
-                      DataColumn(label: Text("Abono al Capital")),
-                      DataColumn(label: Text("Capital Restante")),
-                    ],
-                    rows:
-                        tablaAmortizacion.asMap().entries.map((entry) {
-                          final index = entry.key + 1;
-                          final data = entry.value;
-
-                          return DataRow(
-                            cells: [
-                              DataCell(Text(index.toString())),
-                              DataCell(Text(formatCurrency(data['cuota']))),
-                              DataCell(
-                                Text(formatCurrency(data['abono interes'])),
-                              ),
-                              DataCell(
-                                Text(formatCurrency(data['abono capital'])),
-                              ),
-                              DataCell(Text(formatCurrency(data['capital']))),
-                            ],
-                          );
-                        }).toList(),
-                  ),
+                const Text(
+                  "Deslize hacia la izquierda para ver la tabla...",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  columns: const [
+                    DataColumn(label: Text("Periodo")),
+                    DataColumn(label: Text("Cuota")),
+                    DataColumn(label: Text("Pago de Interés")),
+                    DataColumn(label: Text("Abono al Capital")),
+                    DataColumn(label: Text("Capital Restante")),
+                  ],
+                  rows:
+                      tablaAmortizacion.asMap().entries.map((entry) {
+                        final index = entry.key + 1;
+                        final data = entry.value;
+
+                        return DataRow(
+                          cells: [
+                            DataCell(Text(index.toString())),
+                            DataCell(Text(formatCurrency(data['cuota']))),
+                            DataCell(
+                              Text(formatCurrency(data['abono interes'])),
+                            ),
+                            DataCell(
+                              Text(formatCurrency(data['abono capital'])),
+                            ),
+                            DataCell(Text(formatCurrency(data['capital']))),
+                          ],
+                        );
+                      }).toList(),
+                ),
+              ),
               const SizedBox(height: 20),
             ],
           ),
