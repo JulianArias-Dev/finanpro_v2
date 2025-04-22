@@ -80,11 +80,20 @@ class AuthController extends GetxController {
     }
   }
 
+  // Método salir de la aplicación
+  Future<void> exitApp() async {
+    await _firebaseService.signOut();
+    user.value = null; // Usuario ha cerrado sesión
+    Get.snackbar("Sesión cerrada", "Hasta pronto");
+    Get.offAll(() => StartScreen()); // Redirigir a la vista de login
+  }
+
   // Método para cerrar sesión
   Future<void> signOut() async {
     await _firebaseService.signOut();
     user.value = null; // Usuario ha cerrado sesión
     Get.snackbar("Sesión cerrada", "Hasta pronto");
+    await _clearCredentials(); // Limpiar credenciales almacenadas
     Get.offAll(() => StartScreen()); // Redirigir a la vista de login
   }
 
@@ -104,11 +113,11 @@ class AuthController extends GetxController {
     }
   }
 
-  // Eliminar las credenciales guardadas
-  /* Future<void> _clearCredentials() async {
+  //Eliminar las credenciales guardadas
+  Future<void> _clearCredentials() async {
     storage.value.remove('documentNumber');
     storage.value.remove('password');
-  } */
+  }
 
   Future<bool> areCredentialsStored() async {
     String? documentNumber = storage.value.read('documentNumber');

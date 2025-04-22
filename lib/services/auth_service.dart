@@ -23,50 +23,48 @@ class AuthService {
     required String phone,
     required DateTime birthDate,
   }) async {
-    /*   try { */
-    UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    try {
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
 
-    User? user = userCredential.user;
+      User? user = userCredential.user;
 
-    // Si el usuario se crea correctamente, guarda los datos en Firestore
-    if (user != null) {
-      await _firestore.collection('users').doc(user.uid).set({
-        'firstName': firstName,
-        'secondName': secondName,
-        'firstLastName': firstLastName,
-        'secondLastName': secondLastName,
-        'documentNumber': documentNumber,
-        'email': email,
-        'phone': phone,
-        'birthDate': Timestamp.fromDate(birthDate),
-        'amount': 0.0,
-        'createdAt': FieldValue.serverTimestamp(),
-      });
+      // Si el usuario se crea correctamente, guarda los datos en Firestore
+      if (user != null) {
+        await _firestore.collection('users').doc(user.uid).set({
+          'firstName': firstName,
+          'secondName': secondName,
+          'firstLastName': firstLastName,
+          'secondLastName': secondLastName,
+          'documentNumber': documentNumber,
+          'email': email,
+          'phone': phone,
+          'birthDate': Timestamp.fromDate(birthDate),
+          'amount': 0.0,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
 
-      // Crea una instancia de Usuario usando el modelo
-      Usuario usuario = Usuario(
-        id: user.uid,
-        firstName: firstName,
-        secondName: secondName,
-        firstLastName: firstLastName,
-        secondLastName: secondLastName,
-        documentNumber: documentNumber,
-        email: email,
-        phone: phone,
-        birthDate: birthDate,
-        amount: 0.0,
-      );
+        // Crea una instancia de Usuario usando el modelo
+        Usuario usuario = Usuario(
+          id: user.uid,
+          firstName: firstName,
+          secondName: secondName,
+          firstLastName: firstLastName,
+          secondLastName: secondLastName,
+          documentNumber: documentNumber,
+          email: email,
+          phone: phone,
+          birthDate: birthDate,
+          amount: 0.0,
+        );
 
-      return usuario; // Retorna el objeto Usuario
-    }
+        return usuario; // Retorna el objeto Usuario
+      }
 
-    return null;
-    /* } catch (e) {
+      return null;
+    } catch (e) {
       throw StateError("Error en el registro: $e");
-    } */
+    }
   }
 
   Future<Usuario?> loginWithDocument(
