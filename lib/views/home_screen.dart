@@ -35,7 +35,7 @@ class HomeScreen extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.exit_to_app, size: 25, color: Colors.white),
               onPressed: () {
-                authController.signOut(); // Llamar al método de cerrar sesión
+                authController.exitApp(); // Llamar al método de cerrar sesión
               },
             ),
           ],
