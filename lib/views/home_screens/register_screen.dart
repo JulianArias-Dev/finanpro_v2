@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:finanpro_v2/controllers/auth_controller.dart';
-import 'components/text_field.dart';
+import '../components/text_field.dart';
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({super.key});
@@ -106,7 +106,7 @@ class RegisterScreen extends StatelessWidget {
                   if (password.length > 6) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("La contraseña debe ser de 4 dígitos"),
+                        content: Text("La contraseña debe ser de 6 dígitos"),
                         backgroundColor: Colors.red,
                       ),
                     );

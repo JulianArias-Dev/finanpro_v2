@@ -8,7 +8,7 @@ class AmortizacionController {
   //r = tasa de interes
   //n = numero de meses
 
-  double francesa(double p, double i, int n) {
+  List<Map<String, dynamic>> francesa(double p, double i, int n) {
     //Validar Argumentos
     validarPositivo(p, 'Capital (p)');
     validarPositivo(i, 'Tasa de interés (i)');
@@ -16,8 +16,24 @@ class AmortizacionController {
 
     double r = i; // tasa de interes mensual
     double A = (p * r) / (1 - pow(1 + r, -n));
+    double abonoCapital = p / n;
+    double abonoInteres = A - abonoCapital;
 
-    return A; // cuota mensual
+    List<Map<String, double>> amortizacion = [];
+
+    for (int j = 0; j < n; j++) {
+      p =
+          p - abonoCapital > 0
+              ? double.parse((p - abonoCapital).toStringAsFixed(2))
+              : 0;
+      amortizacion.add({
+        'cuota': A,
+        'abono interes': abonoInteres,
+        'abono capital': abonoCapital,
+        'capital': p,
+      });
+    }
+    return amortizacion;
   }
 
   List<Map<String, dynamic>> alemana(double p, double i, int n) {
@@ -30,6 +46,7 @@ class AmortizacionController {
     double A = double.parse(
       (p / n).toStringAsFixed(2),
     ); // abono fijo de capital
+
     List<Map<String, double>> amortizacion = [];
 
     for (int j = 0; j < n; j++) {
@@ -51,13 +68,31 @@ class AmortizacionController {
     return amortizacion;
   }
 
-  double americana(double p, double i, int n) {
+  List<Map<String, double>> americana(double p, double i, int n) {
     //Validar Argumentos
     validarPositivo(p, 'Capital (p)');
     validarPositivo(i, 'Tasa de interés (i)');
     validarMayorQueCero(n, 'Número de meses (n)');
 
     double cuota = p * i;
-    return cuota; // cuota de interes
+
+    List<Map<String, double>> amortizacion = [];
+    for (int j = 0; j < n - 1; j++) {
+      amortizacion.add({
+        'cuota': cuota,
+        'abono interes': cuota,
+        'abono capital': 0,
+        'capital': p,
+      });
+    }
+
+    amortizacion.add({
+      'cuota': cuota + p,
+      'abono interes': cuota,
+      'abono capital': p,
+      'capital': 0,
+    });
+
+    return amortizacion; // cuota de interes
   }
 }

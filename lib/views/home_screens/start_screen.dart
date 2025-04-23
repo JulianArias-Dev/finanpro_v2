@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'login_screen.dart';
-import './register_screen.dart';
+import 'register_screen.dart';
 
 class StartScreen extends StatelessWidget {
   StartScreen({super.key}) {

@@ -1,9 +1,9 @@
 import 'dart:io';
-import 'package:finanpro_v2/views/start_screen.dart';
+import 'package:finanpro_v2/views/home_screens/start_screen.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart'; // Importar GetStorage
-import 'package:finanpro_v2/views/home_screen.dart';
+import 'package:finanpro_v2/views/home_screens/home_screen.dart';
 import 'package:finanpro_v2/services/auth_service.dart';
 import 'package:finanpro_v2/models/user_model.dart';
 
@@ -75,6 +75,19 @@ class AuthController extends GetxController {
       }
     } catch (e) {
       Get.snackbar("Error", "Ocurrió un error durante el inicio de sesión");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // Método para recuperar contraseña
+  Future<void> resetPassword(String email) async {
+    try {
+      isLoading.value = true;
+      await _firebaseService.sendPasswordResetEmail(email);
+      Get.snackbar('Correo enviado', 'Revisa tu bandeja de entrada');
+    } catch (e) {
+      Get.snackbar('Error', 'No se pudo enviar el correo de recuperación');
     } finally {
       isLoading.value = false;
     }

@@ -1,12 +1,12 @@
-import 'package:finanpro_v2/views/screens/amortizacion_screen.dart';
-import 'package:finanpro_v2/views/screens/anualidades_screen.dart';
-import 'package:finanpro_v2/views/screens/capitalizacion_screen.dart';
-import 'package:finanpro_v2/views/screens/gradientes_screen.dart';
-import 'package:finanpro_v2/views/screens/interes_compuesto_screen.dart';
+import 'package:finanpro_v2/views/function_screens/amortizacion_screen.dart';
+import 'package:finanpro_v2/views/function_screens/anualidades_screen.dart';
+import 'package:finanpro_v2/views/function_screens/capitalizacion_screen.dart';
+import 'package:finanpro_v2/views/function_screens/gradientes_screen.dart';
+import 'package:finanpro_v2/views/function_screens/interes_compuesto_screen.dart';
 import 'package:finanpro_v2/views/components/theme_controller.dart';
-import 'package:finanpro_v2/views/screens/interes_simple_screen.dart';
-import 'package:finanpro_v2/views/screens/series_variables_screen.dart';
-import 'package:finanpro_v2/views/screens/tir_screen.dart';
+import 'package:finanpro_v2/views/function_screens/interes_simple_screen.dart';
+import 'package:finanpro_v2/views/function_screens/series_variables_screen.dart';
+import 'package:finanpro_v2/views/function_screens/tir_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:finanpro_v2/controllers/auth_controller.dart';
@@ -14,6 +14,7 @@ import 'package:finanpro_v2/controllers/auth_controller.dart';
 class MyDrawer extends StatelessWidget {
   MyDrawer({super.key});
   final AuthController authController = Get.find<AuthController>();
+  final ThemeController themeController = Get.find<ThemeController>();
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -116,7 +117,7 @@ class MyDrawer extends StatelessWidget {
                 leading: const Icon(Icons.dark_mode),
                 title: const Text('Modo Oscuro'),
                 onTap: () {
-                  Get.find<ThemeController>().setDarkMode();
+                  themeController.setDarkMode();
                   Navigator.pop(context);
                 },
               ),
@@ -124,7 +125,7 @@ class MyDrawer extends StatelessWidget {
                 leading: const Icon(Icons.light_mode),
                 title: const Text('Modo Claro'),
                 onTap: () {
-                  Get.find<ThemeController>().setLightMode();
+                  themeController.setLightMode();
                   Navigator.pop(context);
                 },
               ),

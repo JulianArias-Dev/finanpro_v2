@@ -138,6 +138,14 @@ class AuthService {
     }
   }
 
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      throw StateError('Error al enviar el correo de recuperación: $e');
+    }
+  }
+
   // Obtener usuario actual
   User? get currentUser {
     return _auth.currentUser;
