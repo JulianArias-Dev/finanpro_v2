@@ -93,45 +93,8 @@ class _AnualidadesScreenState extends State<AnualidadesScreen> {
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
-                    onPressed: () async {
-                      setState(() => _isLoading = true);
-                      await Future.delayed(
-                        const Duration(seconds: 2),
-                      ); // Simula espera
-
-                      double capital = parseCurrency(capitalController.text);
-                      double i = parseCurrency(rateController.text);
-                      int n = parseCurrency(periodController.text).toInt();
-
-                      try {
-                        if (isFutureValue) {
-                          resultController.text = formatCurrency(
-                            controller.calcularValorFinal(capital, i / 100, n),
-                          );
-                        } else if (isPresentValue) {
-                          resultController.text = formatCurrency(
-                            controller.calcularValorActual(capital, i / 100, n),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Debe escoger una opción para calcular.',
-                              ),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        }
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(e.toString()),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      } finally {
-                        setState(() => _isLoading = false);
-                      }
+                    onPressed: () {
+                      calcularResultados();
                     },
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(80, 55),
@@ -172,5 +135,39 @@ class _AnualidadesScreenState extends State<AnualidadesScreen> {
         ],
       ),
     );
+  }
+
+  void calcularResultados() async {
+    setState(() => _isLoading = true);
+    await Future.delayed(const Duration(seconds: 2)); // Simula espera
+
+    double capital = parseCurrency(capitalController.text);
+    double i = parseCurrency(rateController.text);
+    int n = parseCurrency(periodController.text).toInt();
+
+    try {
+      if (isFutureValue) {
+        resultController.text = formatCurrency(
+          controller.calcularValorFinal(capital, i / 100, n),
+        );
+      } else if (isPresentValue) {
+        resultController.text = formatCurrency(
+          controller.calcularValorActual(capital, i / 100, n),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Debe escoger una opción para calcular.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 }
