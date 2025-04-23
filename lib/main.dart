@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_storage/get_storage.dart';
 import 'firebase_options.dart';
-import 'views/start_screen.dart';
+import 'views/home_screens/start_screen.dart';
 import 'views/components/theme_controller.dart';
 import 'package:finanpro_v2/controllers/auth_controller.dart';
 

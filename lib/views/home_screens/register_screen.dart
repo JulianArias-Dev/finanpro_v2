@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:finanpro_v2/controllers/auth_controller.dart';
-import 'components/text_field.dart';
+import '../components/text_field.dart';
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({super.key});
