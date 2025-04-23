@@ -16,7 +16,7 @@ class AuthService {
     required String email,
     required String password,
     required String firstName,
-    required String secondName,
+    String? secondName,
     required String firstLastName,
     required String secondLastName,
     required String documentNumber,
@@ -24,12 +24,39 @@ class AuthService {
     required DateTime birthDate,
   }) async {
     try {
+      // Verificar si el email ya existe en Firebase Auth
+      final existingEmailUsers = await _auth.fetchSignInMethodsForEmail(email);
+      if (existingEmailUsers.isNotEmpty) {
+        throw StateError('El correo ya está registrado.');
+      }
+
+      // Verificar si documentNumber ya existe en Firestore
+      final docQuery =
+          await _firestore
+              .collection('users')
+              .where('documentNumber', isEqualTo: documentNumber)
+              .limit(1)
+              .get();
+      if (docQuery.docs.isNotEmpty) {
+        throw StateError('El número de documento ya está registrado.');
+      }
+
+      // Verificar si phone ya existe en Firestore
+      final phoneQuery =
+          await _firestore
+              .collection('users')
+              .where('phone', isEqualTo: phone)
+              .limit(1)
+              .get();
+      if (phoneQuery.docs.isNotEmpty) {
+        throw StateError('El número de teléfono ya está registrado.');
+      }
+
+      // Crear usuario en Firebase Auth
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
-
       User? user = userCredential.user;
 
-      // Si el usuario se crea correctamente, guarda los datos en Firestore
       if (user != null) {
         await _firestore.collection('users').doc(user.uid).set({
           'firstName': firstName,
@@ -44,11 +71,10 @@ class AuthService {
           'createdAt': FieldValue.serverTimestamp(),
         });
 
-        // Crea una instancia de Usuario usando el modelo
-        Usuario usuario = Usuario(
+        return Usuario(
           id: user.uid,
           firstName: firstName,
-          secondName: secondName,
+          secondName: secondName ?? '',
           firstLastName: firstLastName,
           secondLastName: secondLastName,
           documentNumber: documentNumber,
@@ -57,8 +83,6 @@ class AuthService {
           birthDate: birthDate,
           amount: 0.0,
         );
-
-        return usuario; // Retorna el objeto Usuario
       }
 
       return null;
@@ -81,7 +105,7 @@ class AuthService {
               .get();
 
       if (query.docs.isEmpty) {
-        throw StateError("Error: No se encontró un usuario con esa cédula.");
+        throw StateError("No se encontró un usuario con esa cédula.");
       }
 
       // 2. Obtener el email asociado al número de documento
@@ -97,7 +121,7 @@ class AuthService {
 
       User? user = userCredential.user;
       if (user == null) {
-        throw StateError("Error: Error al iniciar sesion 11.");
+        throw StateError("Error al iniciar sesión.");
       }
 
       // 4. Obtener los datos del usuario desde Firestore
@@ -105,9 +129,7 @@ class AuthService {
           await _firestore.collection('users').doc(user.uid).get();
 
       if (!userDoc.exists) {
-        throw StateError(
-          "Error: No se encontraron datos del usuario en Firestore.",
-        );
+        throw StateError("No se encontraron datos del usuario en Firestore.");
       }
 
       Map<String, dynamic> data = userDoc.data() as Map<String, dynamic>;
@@ -125,8 +147,16 @@ class AuthService {
         birthDate: (data['birthDate'] as Timestamp).toDate(),
         amount: data.containsKey('amount') ? data['amount'] : 0,
       );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'wrong-password') {
+        throw StateError('Contraseña incorrecta.');
+      } else if (e.code == 'user-not-found') {
+        throw StateError('No se encontró un usuario con ese correo.');
+      } else {
+        throw StateError('Error de autenticación valide sus credenciales.');
+      }
     } catch (e) {
-      throw UnsupportedError("Error en el inicio de sesión: $e");
+      throw StateError("Error en el inicio de sesión: $e");
     }
   }
 

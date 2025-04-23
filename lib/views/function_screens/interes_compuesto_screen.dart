@@ -23,6 +23,7 @@ class _InteresCompuestoScreen extends State<InteresCompuestoScreen> {
   TextEditingController interesController = TextEditingController();
   bool isMonthly = false;
   bool isAnnual = false;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -35,183 +36,194 @@ class _InteresCompuestoScreen extends State<InteresCompuestoScreen> {
         ),
         backgroundColor: Color.fromARGB(255, 111, 183, 31),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Interés Compuesto",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                "Es aquel que se va sumando al capital inicial y sobre el que se van generando nuevos intereses. El dinero, en este caso, tiene un efecto multiplicador porque los intereses producen nuevos intereses.",
-                style: TextStyle(fontSize: 16),
-              ),
-              buildImage(context, 'assets/formulas/InteresCompuesto.png', 0.3),
-              const Text('Capitalización:'),
-              Row(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Checkbox(
-                    value: isMonthly,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        isMonthly = value!;
-                        isAnnual = !isMonthly;
-                      });
-                    },
+                  const Text(
+                    "Interés Compuesto",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
-                  const Text("Mensual"),
-                  const SizedBox(width: 15),
-                  Checkbox(
-                    value: isAnnual,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        isAnnual = value!;
-                        isMonthly = !isAnnual;
-                      });
-                    },
+                  const SizedBox(height: 10),
+                  const Text(
+                    "Es aquel que se va sumando al capital inicial y sobre el que se van generando nuevos intereses. El dinero, en este caso, tiene un efecto multiplicador porque los intereses producen nuevos intereses.",
+                    style: TextStyle(fontSize: 16),
                   ),
-                  const Text("Anual"),
-                ],
-              ),
-              buildTextField(
-                "Capital (\$)",
-                capitalController,
-                isMoney: true,
-                isNumeric: true,
-              ),
-              buildTextField(
-                "Tasa de interés (%)",
-                rateController,
-                isNumeric: true,
-              ),
-              const SizedBox(height: 5),
-              const Text('Tiempo'),
-              Row(
-                children: [
-                  Expanded(
-                    child: buildTextField(
-                      "Años",
-                      yearController,
-                      isNumeric: true,
-                    ),
+                  buildImage(
+                    context,
+                    'assets/formulas/InteresCompuesto.png',
+                    0.3,
                   ),
-                  Expanded(
-                    child: buildTextField(
-                      "Meses",
-                      monthController,
-                      isNumeric: true,
-                    ),
-                  ),
-                  Expanded(
-                    child: buildTextField(
-                      "Días",
-                      dayController,
-                      isNumeric: true,
-                    ),
-                  ),
-                ],
-              ),
-              buildTextField(
-                "Valor final (\$)",
-                interesController,
-                isMoney: true,
-                isNumeric: true,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  double capital = parseCurrency(capitalController.text);
-                  double rate = parseCurrency(rateController.text);
-                  double generated = parseCurrency(interesController.text);
-
-                  int year =
-                      int.tryParse(toNumericString(yearController.text)) ?? 0;
-                  int month =
-                      int.tryParse(toNumericString(monthController.text)) ?? 0;
-                  int day =
-                      int.tryParse(toNumericString(dayController.text)) ?? 0;
-                  Tiempo duree = Tiempo(year, month, day);
-
-                  String type =
-                      isAnnual
-                          ? 'annual'
-                          : isMonthly
-                          ? 'monthly'
-                          : '';
-                  try {
-                    if (type.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Debe escoger una opción para calcular.',
-                          ),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                    if (capital == 0) {
-                      capitalController.text = formatCurrency(
-                        logicController.calcularCapitalCompuesto(
-                          rate / 100,
-                          generated,
-                          duree,
-                          type,
-                        ),
-                      );
-                    } else if (rate == 0) {
-                      rateController.text = (logicController
-                                  .calcularTasaInteresCompuesto(
-                                    capital,
-                                    generated,
-                                    duree,
-                                    type,
-                                  ) *
-                              100)
-                          .toStringAsFixed(2);
-                    } else if (duree.isEmpty()) {
-                      duree = logicController.calcularTiempoInteresCompuesto(
-                        capital,
-                        rate / 100,
-                        generated,
-                        type,
-                      );
-                      yearController.text = duree.years.toString();
-                      monthController.text = duree.months.toString();
-                      dayController.text = duree.days.toString();
-                    } else if (generated == 0) {
-                      interesController.text = formatCurrency(
-                        logicController.calcularInteresCompuesto(
-                          capital,
-                          rate / 100,
-                          duree,
-                          type,
-                        ),
-                      );
-                    }
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(e.toString()),
-                        backgroundColor: Colors.red,
+                  const Text('Capitalización:'),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: isMonthly,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            isMonthly = value!;
+                            isAnnual = !isMonthly;
+                          });
+                        },
                       ),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(80, 55),
-                  backgroundColor: const Color.fromARGB(255, 111, 183, 31),
-                  foregroundColor: Colors.white, // Text color
-                ),
-                child: const Text("Calcular", style: TextStyle(fontSize: 20)),
+                      const Text("Mensual"),
+                      const SizedBox(width: 15),
+                      Checkbox(
+                        value: isAnnual,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            isAnnual = value!;
+                            isMonthly = !isAnnual;
+                          });
+                        },
+                      ),
+                      const Text("Anual"),
+                    ],
+                  ),
+                  buildTextField(
+                    "Capital (\$)",
+                    capitalController,
+                    isMoney: true,
+                    isNumeric: true,
+                  ),
+                  buildTextField(
+                    "Tasa de interés (%)",
+                    rateController,
+                    isNumeric: true,
+                  ),
+                  const SizedBox(height: 5),
+                  const Text('Tiempo'),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: buildTextField(
+                          "Años",
+                          yearController,
+                          isNumeric: true,
+                        ),
+                      ),
+                      Expanded(
+                        child: buildTextField(
+                          "Meses",
+                          monthController,
+                          isNumeric: true,
+                        ),
+                      ),
+                      Expanded(
+                        child: buildTextField(
+                          "Días",
+                          dayController,
+                          isNumeric: true,
+                        ),
+                      ),
+                    ],
+                  ),
+                  buildTextField(
+                    "Valor final (\$)",
+                    interesController,
+                    isMoney: true,
+                    isNumeric: true,
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () async {
+                      calcularResultados();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(80, 55),
+                      backgroundColor: const Color.fromARGB(255, 111, 183, 31),
+                      foregroundColor: Colors.white, // Text color
+                    ),
+                    child: const Text(
+                      "Calcular",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+          if (_isLoading) const Center(child: CircularProgressIndicator()),
+        ],
       ),
     );
+  }
+
+  void calcularResultados() async {
+    double capital = parseCurrency(capitalController.text);
+    double rate = parseCurrency(rateController.text);
+    double generated = parseCurrency(interesController.text);
+
+    int year = int.tryParse(toNumericString(yearController.text)) ?? 0;
+    int month = int.tryParse(toNumericString(monthController.text)) ?? 0;
+    int day = int.tryParse(toNumericString(dayController.text)) ?? 0;
+    Tiempo duree = Tiempo(year, month, day);
+
+    String type =
+        isAnnual
+            ? 'annual'
+            : isMonthly
+            ? 'monthly'
+            : '';
+    try {
+      setState(() => _isLoading = true);
+      await Future.delayed(const Duration(seconds: 2)); // Simula espera
+      if (type.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Debe escoger una opción para calcular.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      if (capital == 0) {
+        capitalController.text = formatCurrency(
+          logicController.calcularCapitalCompuesto(
+            rate / 100,
+            generated,
+            duree,
+            type,
+          ),
+        );
+      } else if (rate == 0) {
+        rateController.text = (logicController.calcularTasaInteresCompuesto(
+                  capital,
+                  generated,
+                  duree,
+                  type,
+                ) *
+                100)
+            .toStringAsFixed(2);
+      } else if (duree.isEmpty()) {
+        duree = logicController.calcularTiempoInteresCompuesto(
+          capital,
+          rate / 100,
+          generated,
+          type,
+        );
+        yearController.text = duree.years.toString();
+        monthController.text = duree.months.toString();
+        dayController.text = duree.days.toString();
+      } else if (generated == 0) {
+        interesController.text = formatCurrency(
+          logicController.calcularInteresCompuesto(
+            capital,
+            rate / 100,
+            duree,
+            type,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 }

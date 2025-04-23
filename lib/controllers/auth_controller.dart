@@ -31,6 +31,18 @@ class AuthController extends GetxController {
     String phone,
     DateTime birthDate,
   ) async {
+    final validationMessage = validateRegistrationData(
+      email: email,
+      password: password,
+      documentNumber: documentNumber,
+      phone: phone,
+      birthDate: birthDate,
+    );
+
+    if (validationMessage != null) {
+      Get.snackbar("Validación", validationMessage);
+      return;
+    }
     try {
       isLoading.value = true;
       Usuario? newUser = await _firebaseService.registerWithEmail(
@@ -46,7 +58,10 @@ class AuthController extends GetxController {
       );
       if (newUser != null) {
         user.value = newUser; // Usuario registrado exitosamente
-        await _saveCredentials(email, password); // Guardar credenciales
+        await _saveCredentials(
+          documentNumber,
+          password,
+        ); // Guardar credenciales
         Get.offAll(() => HomeScreen()); // Redirigir a la vista principal
       } else {
         Get.snackbar("Error", "No se pudo registrar el usuario");
@@ -74,7 +89,10 @@ class AuthController extends GetxController {
         Get.snackbar("Error", "No se pudo iniciar sesión");
       }
     } catch (e) {
-      Get.snackbar("Error", "Ocurrió un error durante el inicio de sesión");
+      Get.snackbar(
+        "Error",
+        e is StateError ? e.message : "Ocurrió un error inesperado",
+      );
     } finally {
       isLoading.value = false;
     }
@@ -136,5 +154,41 @@ class AuthController extends GetxController {
     String? documentNumber = storage.value.read('documentNumber');
     String? password = storage.value.read('password');
     return documentNumber != null && password != null;
+  }
+
+  String? validateRegistrationData({
+    required String email,
+    required String password,
+    required String documentNumber,
+    required String phone,
+    required DateTime birthDate,
+  }) {
+    final emailRegex = RegExp(r'^[\w\.-]+@[\w\.-]+\.\w+$');
+    final passwordRegex = RegExp(r'^\d{6,}$');
+    final documentRegex = RegExp(r'^\d{8,10}$');
+    final phoneRegex = RegExp(r'^3\d{9}$');
+
+    if (!emailRegex.hasMatch(email)) {
+      return 'Correo electrónico inválido.';
+    }
+
+    if (!passwordRegex.hasMatch(password)) {
+      return 'La contraseña debe ser numérica y tener al menos 6 dígitos.';
+    }
+
+    if (!documentRegex.hasMatch(documentNumber)) {
+      return 'Número de documento inválido. Debe tener entre 8 y 10 dígitos.';
+    }
+
+    if (!phoneRegex.hasMatch(phone)) {
+      return 'Número de teléfono inválido. Debe comenzar con 3 y tener 10 dígitos.';
+    }
+
+    int age = DateTime.now().difference(birthDate).inDays ~/ 365;
+    if (age < 15) {
+      return 'Debes tener al menos 15 años para registrarte.';
+    }
+
+    return null; // Todo es válido
   }
 }

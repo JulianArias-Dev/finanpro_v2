@@ -13,7 +13,7 @@ class CapitalizacionScreen extends StatefulWidget {
 
 class _CapitalizacionScreenState extends State<CapitalizacionScreen> {
   final CapitalizacionController controller = CapitalizacionController();
-
+  bool _isLoading = false;
   String tipoCapitalizacion = 'Individual compuesta';
   Map<String, String> tipos = {
     'Individual compuesta': 'CapInicial',
@@ -44,176 +44,202 @@ class _CapitalizacionScreenState extends State<CapitalizacionScreen> {
         title: const Text('Capitalización'),
         backgroundColor: const Color.fromARGB(255, 111, 183, 31),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Sistemas de capitalización",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              "La capitalización es el proceso mediante el cual se acumulan intereses sobre un capital inicial, generando un crecimiento exponencial del mismo a lo largo del tiempo.",
-              style: TextStyle(fontSize: 16),
-            ),
-            buildImage(
-              context,
-              'assets/formulas/${tipos[tipoCapitalizacion]}.png',
-              0.3,
-            ),
-            DropdownButtonFormField<String>(
-              value: tipoCapitalizacion,
-              decoration: const InputDecoration(
-                labelText: "Tipo de capitalización",
-                border: OutlineInputBorder(),
-              ),
-              items: const [
-                DropdownMenuItem(
-                  value: 'Individual compuesta',
-                  child: Text('Individual compuesta'),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Sistemas de capitalización",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
-                DropdownMenuItem(
-                  value: 'Individual con aportes',
-                  child: Text('Individual con aportes Periódicos'),
+                const SizedBox(height: 10),
+                const Text(
+                  "La capitalización es el proceso mediante el cual se acumulan intereses sobre un capital inicial, generando un crecimiento exponencial del mismo a lo largo del tiempo.",
+                  style: TextStyle(fontSize: 16),
                 ),
-                DropdownMenuItem(value: 'Colectiva', child: Text('Colectiva')),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  tipoCapitalizacion = value!;
-                  resultado = '';
-                });
-              },
-            ),
-            const SizedBox(height: 20),
-            if (tipoCapitalizacion == 'Individual compuesta') ...[
-              buildTextField(
-                'Capital inicial (\$)',
-                capitalInicialController,
-                isNumeric: true,
-                isMoney: true,
-              ),
-              buildTextField(
-                'Tasa de interés (%)',
-                tasaController,
-                isNumeric: true,
-              ),
-              buildTextField(
-                'Número de periodos por año',
-                periodosAnualesController,
-                isNumeric: true,
-              ),
-              buildTextField(
-                'Número de años',
-                aniosController,
-                isNumeric: true,
-              ),
-            ] else if (tipoCapitalizacion == 'Individual con aportes') ...[
-              buildTextField(
-                'Aporte periódico (\$)',
-                aportePeriodicoController,
-                isNumeric: true,
-                isMoney: true,
-              ),
-              buildTextField(
-                'Tasa de interés (%)',
-                tasaController,
-                isNumeric: true,
-              ),
-              buildTextField(
-                'Número de aportes',
-                numeroAportesController,
-                isNumeric: true,
-              ),
-            ] else if (tipoCapitalizacion == 'Colectiva') ...[
-              const Text(
-                "Aportes y tiempos:",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: aportesColectivos.length,
-                itemBuilder: (context, index) {
-                  return Row(
+                buildImage(
+                  context,
+                  'assets/formulas/${tipos[tipoCapitalizacion]}.png',
+                  0.3,
+                ),
+                DropdownButtonFormField<String>(
+                  value: tipoCapitalizacion,
+                  decoration: const InputDecoration(
+                    labelText: "Tipo de capitalización",
+                    border: OutlineInputBorder(),
+                  ),
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'Individual compuesta',
+                      child: Text('Individual compuesta'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Individual con aportes',
+                      child: Text('Individual con aportes Periódicos'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Colectiva',
+                      child: Text('Colectiva'),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      tipoCapitalizacion = value!;
+                      resultado = '';
+                    });
+                  },
+                ),
+                const SizedBox(height: 20),
+                if (tipoCapitalizacion == 'Individual compuesta') ...[
+                  buildTextField(
+                    'Capital inicial (\$)',
+                    capitalInicialController,
+                    isNumeric: true,
+                    isMoney: true,
+                  ),
+                  buildTextField(
+                    'Tasa de interés (%)',
+                    tasaController,
+                    isNumeric: true,
+                  ),
+                  buildTextField(
+                    'Número de periodos por año',
+                    periodosAnualesController,
+                    isNumeric: true,
+                  ),
+                  buildTextField(
+                    'Número de años',
+                    aniosController,
+                    isNumeric: true,
+                  ),
+                ] else if (tipoCapitalizacion == 'Individual con aportes') ...[
+                  buildTextField(
+                    'Aporte periódico (\$)',
+                    aportePeriodicoController,
+                    isNumeric: true,
+                    isMoney: true,
+                  ),
+                  buildTextField(
+                    'Tasa de interés (%)',
+                    tasaController,
+                    isNumeric: true,
+                  ),
+                  buildTextField(
+                    'Número de aportes',
+                    numeroAportesController,
+                    isNumeric: true,
+                  ),
+                ] else if (tipoCapitalizacion == 'Colectiva') ...[
+                  const Text(
+                    "Aportes y tiempos:",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: aportesColectivos.length,
+                    itemBuilder: (context, index) {
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: buildTextField(
+                              'Aporte \$',
+                              aportesColectivos[index],
+                              isNumeric: true,
+                              isMoney: true,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: buildTextField(
+                              'Tiempo',
+                              tiemposColectivos[index],
+                              isNumeric: true,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                  Row(
                     children: [
-                      Expanded(
-                        child: buildTextField(
-                          'Aporte \$',
-                          aportesColectivos[index],
-                          isNumeric: true,
-                          isMoney: true,
-                        ),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            aportesColectivos.add(TextEditingController());
+                            tiemposColectivos.add(TextEditingController());
+                          });
+                        },
+                        child: const Text("Agregar"),
                       ),
                       const SizedBox(width: 10),
-                      Expanded(
-                        child: buildTextField(
-                          'Tiempo',
-                          tiemposColectivos[index],
-                          isNumeric: true,
-                        ),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            if (aportesColectivos.length > 1) {
+                              aportesColectivos.removeLast();
+                              tiemposColectivos.removeLast();
+                            }
+                          });
+                        },
+                        child: const Text("Eliminar"),
                       ),
                     ],
-                  );
-                },
-              ),
-              Row(
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        aportesColectivos.add(TextEditingController());
-                        tiemposColectivos.add(TextEditingController());
-                      });
-                    },
-                    child: const Text("Agregar"),
                   ),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        if (aportesColectivos.length > 1) {
-                          aportesColectivos.removeLast();
-                          tiemposColectivos.removeLast();
-                        }
-                      });
-                    },
-                    child: const Text("Eliminar"),
+                  const SizedBox(height: 10),
+                  buildTextField(
+                    'Tasa de interés (%)',
+                    tasaColectivaController,
+                    isNumeric: true,
                   ),
                 ],
-              ),
-              const SizedBox(height: 10),
-              buildTextField(
-                'Tasa de interés (%)',
-                tasaColectivaController,
-                isNumeric: true,
-              ),
-            ],
-            const SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 111, 183, 31),
-                foregroundColor: Colors.white,
-                minimumSize: const Size.fromHeight(50),
-              ),
-              onPressed: calcularResultado,
-              child: const Text("Calcular"),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 111, 183, 31),
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size.fromHeight(50),
+                  ),
+                  onPressed: calcularResultado,
+                  child: const Text("Calcular"),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  resultado,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
-            Text(
-              resultado,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+
+          // Overlay: Capa encima cuando se está cargando
+          if (_isLoading)
+            Container(
+              color: Color.fromARGB(
+                120,
+                0,
+                0,
+                0,
+              ), // Color de fondo semitransparente
+              child: const Center(
+                child: CircularProgressIndicator(color: Colors.white),
+              ),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }
 
-  void calcularResultado() {
+  void calcularResultado() async {
     try {
+      setState(() => _isLoading = true);
+      await Future.delayed(const Duration(seconds: 2)); // Simula espera
       double res = 0;
 
       if (tipoCapitalizacion == 'Individual compuesta') {
