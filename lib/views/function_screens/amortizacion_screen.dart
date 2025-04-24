@@ -187,6 +187,7 @@ class _AmortizacionScreen extends State<AmortizacionScreen> {
   }
 
   void calcularResultados() async {
+    FocusScope.of(context).unfocus();
     try {
       setState(() => _isLoading = true);
       await Future.delayed(const Duration(seconds: 2)); // Simula espera

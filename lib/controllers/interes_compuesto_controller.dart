@@ -13,12 +13,15 @@ class InteresCompuestoController {
   ) {
     // Validar argumentos
     validarMayorQueCero(capital, 'Capital inicial');
+    validarRango(capital, 'Capital inicial', max: 1e12); // Capital ≤ 1 billón
     validarMayorQueCero(interes, 'Tasa de interés');
+    validarRango(interes, 'Tasa de interés', min: 0.0, max: 2.0); // Tasa ≤ 200%
+    validarPrecision(interes, 4, 'Tasa de interés'); // Máximo 4 decimales
     validarMayorIgualCero(duree.years, 'Años');
     validarMayorIgualCero(duree.months, 'Meses');
     validarMayorIgualCero(duree.days, 'Días');
     if (type.isEmpty) {
-      throw ArgumentError("El tipo de capiptalización no debe estar vacío.");
+      throw ArgumentError("El tipo de capitalización no debe estar vacío.");
     }
 
     switch (type) {
@@ -40,12 +43,18 @@ class InteresCompuestoController {
   ) {
     // Validar argumentos
     validarMayorQueCero(capital, 'Capital inicial');
+    validarRango(capital, 'Capital inicial', max: 1e12); // Capital ≤ 1 billón
     validarMayorQueCero(generatedInteres, 'Interés generado');
+    validarPrecision(
+      generatedInteres,
+      4,
+      'Interés generado',
+    ); // Máximo 4 decimales
     validarMayorIgualCero(duree.years, 'Años');
     validarMayorIgualCero(duree.months, 'Meses');
     validarMayorIgualCero(duree.days, 'Días');
     if (type.isEmpty) {
-      throw ArgumentError("El tipo de capiptalización no debe estar vacío.");
+      throw ArgumentError("El tipo de capitalización no debe estar vacío.");
     }
     int cicles;
     switch (type) {
@@ -69,12 +78,19 @@ class InteresCompuestoController {
   ) {
     // Validar argumentos
     validarMayorQueCero(interes, 'Tasa de interés');
+    validarRango(interes, 'Tasa de interés', min: 0.0, max: 2.0); // Tasa ≤ 200%
+    validarPrecision(interes, 4, 'Tasa de interés'); // Máximo 4 decimales
     validarMayorQueCero(generatedInteres, 'Interés generado');
+    validarPrecision(
+      generatedInteres,
+      4,
+      'Interés generado',
+    ); // Máximo 4 decimales
     validarMayorIgualCero(duree.years, 'Años');
     validarMayorIgualCero(duree.months, 'Meses');
     validarMayorIgualCero(duree.days, 'Días');
     if (type.isEmpty) {
-      throw ArgumentError("El tipo de capiptalización no debe estar vacío.");
+      throw ArgumentError("El tipo de capitalización no debe estar vacío.");
     }
     int cicles;
     switch (type) {
@@ -98,10 +114,13 @@ class InteresCompuestoController {
   ) {
     // Validar argumentos
     validarMayorQueCero(capital, 'Capital inicial');
+    validarRango(capital, 'Capital inicial', max: 1e12); // Capital ≤ 1 billón
     validarMayorQueCero(interes, 'Tasa de interés');
+    validarRango(interes, 'Tasa de interés', min: 0.0, max: 2.0); // Tasa ≤ 200%
+    validarPrecision(interes, 4, 'Tasa de interés'); // Máximo 4 decimales
     validarMayorQueCero(montoCompuesto, 'Monto compuesto');
     if (type.isEmpty) {
-      throw ArgumentError("El tipo de capiptalización no debe estar vacío.");
+      throw ArgumentError("El tipo de capitalización no debe estar vacío.");
     }
     double cicles = (log(montoCompuesto) - log(capital)) / log(1 + interes);
 

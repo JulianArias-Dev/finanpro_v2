@@ -12,9 +12,13 @@ class SeriesVariablesController {
   }) {
     // Validar argumentos
     validarMayorQueCero(A, 'Valor Anualidad (A)');
+    validarRango(A, 'Valor Anualidad (A)', max: 1e12); // Aporte ≤ 1 billón
     validarMayorIgualCero(g, 'Tasa de crecimiento (g)');
     validarMayorQueCero(n, 'Número de períodos (n)');
     validarMayorQueCero(i, 'Tasa de interés (i)');
+    validarRango(i, 'Tasa de interés (i)', min: 0.0, max: 2.0); // Tasa ≤ 200%
+    validarPrecision(i, 4, 'Tasa de interés (i)'); // Máximo 4 decimales
+
     // A: Valor Anualidad
     // g: Tasa de crecimiento (puede ser positiva o negativa)
     // n: Número de períodos
@@ -45,9 +49,12 @@ class SeriesVariablesController {
   }) {
     // Validar argumentos
     validarMayorQueCero(A, 'Valor Anualidad (A)');
+    validarRango(A, 'Valor Anualidad (A)', max: 1e12); // Aporte ≤ 1 billón
     validarMayorIgualCero(g, 'Tasa de crecimiento (g)');
     validarMayorQueCero(n, 'Número de períodos (n)');
     validarMayorQueCero(i, 'Tasa de interés (i)');
+    validarRango(i, 'Tasa de interés (i)', min: 0.0, max: 2.0); // Tasa ≤ 200%
+    validarPrecision(i, 4, 'Tasa de interés (i)'); // Máximo 4 decimales
 
     // A: Valor Anualidad
     // g: Tasa de crecimiento (puede ser positiva o negativa)

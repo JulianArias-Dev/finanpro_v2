@@ -97,6 +97,7 @@ class _InteresCompuestoScreen extends State<InteresCompuestoScreen> {
                   ),
                   const SizedBox(height: 5),
                   const Text('Tiempo'),
+                  const SizedBox(height: 5),
                   Row(
                     children: [
                       Expanded(
@@ -154,6 +155,8 @@ class _InteresCompuestoScreen extends State<InteresCompuestoScreen> {
   }
 
   void calcularResultados() async {
+    FocusScope.of(context).unfocus(); // Oculta el teclado
+
     double capital = parseCurrency(capitalController.text);
     double rate = parseCurrency(rateController.text);
     double generated = parseCurrency(interesController.text);
@@ -170,6 +173,19 @@ class _InteresCompuestoScreen extends State<InteresCompuestoScreen> {
             ? 'monthly'
             : '';
     try {
+      if (capital != 0 && rate != 0 && generated != 0 && !duree.isEmpty()) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'No se ha identificado una variable desconocida para calcular. '
+              'Asegúrese de dejar un campo vacío o en cero.',
+            ),
+            backgroundColor: Colors.orange,
+          ),
+        );
+        return;
+      }
+
       setState(() => _isLoading = true);
       await Future.delayed(const Duration(seconds: 2)); // Simula espera
       if (type.isEmpty) {
@@ -190,14 +206,15 @@ class _InteresCompuestoScreen extends State<InteresCompuestoScreen> {
           ),
         );
       } else if (rate == 0) {
-        rateController.text = (logicController.calcularTasaInteresCompuesto(
-                  capital,
-                  generated,
-                  duree,
-                  type,
-                ) *
-                100)
-            .toStringAsFixed(2);
+        rateController.text = formatCurrency(
+          logicController.calcularTasaInteresCompuesto(
+                capital,
+                generated,
+                duree,
+                type,
+              ) *
+              100,
+        );
       } else if (duree.isEmpty()) {
         duree = logicController.calcularTiempoInteresCompuesto(
           capital,

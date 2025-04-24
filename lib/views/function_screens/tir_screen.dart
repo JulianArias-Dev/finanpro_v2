@@ -34,7 +34,7 @@ class _TirScreen extends State<TirScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                "Tasa Interna de Retorno (TIR)",
+                "Tasa de Interés de Retorno (TIR)",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
@@ -54,6 +54,7 @@ class _TirScreen extends State<TirScreen> {
                 "Flujos de efectivo:",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
+              const SizedBox(height: 5),
               Column(
                 children: List.generate(flujoControllers.length, (index) {
                   return buildTextField(
@@ -89,6 +90,7 @@ class _TirScreen extends State<TirScreen> {
               ElevatedButton(
                 onPressed: () {
                   try {
+                    FocusScope.of(context).unfocus();
                     List<double> flujos = [];
                     flujos.add(parseCurrency(inversionController.text));
                     flujos.addAll(

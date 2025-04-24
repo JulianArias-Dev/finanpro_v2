@@ -138,6 +138,7 @@ class _AnualidadesScreenState extends State<AnualidadesScreen> {
   }
 
   void calcularResultados() async {
+    FocusScope.of(context).unfocus();
     setState(() => _isLoading = true);
     await Future.delayed(const Duration(seconds: 2)); // Simula espera
 
