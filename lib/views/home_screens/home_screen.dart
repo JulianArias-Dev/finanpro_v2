@@ -1,12 +1,13 @@
-import 'package:finanpro_v2/controllers/text_formater.dart';
 import 'package:finanpro_v2/views/function_screens/amortizacion_screen.dart';
 import 'package:finanpro_v2/views/function_screens/anualidades_screen.dart';
 import 'package:finanpro_v2/views/function_screens/capitalizacion_screen.dart';
 import 'package:finanpro_v2/views/function_screens/gradientes_screen.dart';
 import 'package:finanpro_v2/views/function_screens/interes_compuesto_screen.dart';
 import 'package:finanpro_v2/views/function_screens/interes_simple_screen.dart';
+import 'package:finanpro_v2/views/function_screens/pagar_prestamo.dart';
 import 'package:finanpro_v2/views/function_screens/series_variables_screen.dart';
 import 'package:finanpro_v2/views/function_screens/tir_screen.dart';
+import 'package:finanpro_v2/views/home_screens/PrestamosVigentesScreen.dart';
 import 'package:finanpro_v2/views/home_screens/SolicitarPrestamoScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -191,9 +192,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           buildOptionButton(
                             "Préstamos Vigentes",
                             context,
-                            null,
+                            const PrestamosVigentesScreen(),
                           ),
-                          buildOptionButton("Pagar Préstamo", context, null),
+                          buildOptionButton(
+                            "Pagar Préstamo",
+                            context,
+                            const PagarPrestamoScreen(),
+                          ),
                         ],
                       ),
                     ),

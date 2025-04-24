@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:finanpro_v2/controllers/PrestamoController.dart';
 import 'package:flutter/material.dart';
 
 class SolicitarPrestamoScreen extends StatefulWidget {
@@ -16,10 +17,18 @@ class _SolicitarPrestamoScreenState extends State<SolicitarPrestamoScreen> {
   TextEditingController cuotaController = TextEditingController();
   bool _isLoading = false;
 
-  // Tasa de interés fija informativa
   final double fixedInterestRate = 0.12; // 12% fijo
-  List<Map<String, num>> _payments =
-      []; // Cambié a num para permitir tanto int como double
+  List<Map<String, num>> _payments = [];
+
+  final List<String> calculationTypes = [
+    'Interés Simple',
+    'Interés Compuesto',
+    'Amortización',
+    'Gradiente',
+    'Anualidades',
+  ];
+
+  String selectedCalculationType = 'Amortización';
 
   @override
   Widget build(BuildContext context) {
@@ -49,15 +58,36 @@ class _SolicitarPrestamoScreenState extends State<SolicitarPrestamoScreen> {
                     style: TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 20),
-
-                  // Tasa de interés fija informativa
                   Text(
                     "Tasa de interés fija: ${fixedInterestRate * 100}%",
                     style: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 20),
 
-                  // Campo de Capital
+                  /// Campo: Selección de tipo de cálculo
+                  DropdownButtonFormField<String>(
+                    value: selectedCalculationType,
+                    items:
+                        calculationTypes
+                            .map(
+                              (type) => DropdownMenuItem(
+                                value: type,
+                                child: Text(type),
+                              ),
+                            )
+                            .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedCalculationType = value!;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      labelText: "Tipo de Cálculo",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
                   _buildTextField(
                     "Monto del Préstamo (\$)",
                     capitalController,
@@ -66,7 +96,6 @@ class _SolicitarPrestamoScreenState extends State<SolicitarPrestamoScreen> {
                   ),
                   const SizedBox(height: 15),
 
-                  // Campo de Tasa de Interés
                   _buildTextField(
                     "Tasa de Interés (%)",
                     rateController,
@@ -74,7 +103,6 @@ class _SolicitarPrestamoScreenState extends State<SolicitarPrestamoScreen> {
                   ),
                   const SizedBox(height: 15),
 
-                  // Campo de Periodos
                   _buildTextField(
                     "Períodos (meses)",
                     periodController,
@@ -82,7 +110,6 @@ class _SolicitarPrestamoScreenState extends State<SolicitarPrestamoScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Botón Calcular
                   ElevatedButton(
                     onPressed: () {
                       calcularResultados();
@@ -99,7 +126,6 @@ class _SolicitarPrestamoScreenState extends State<SolicitarPrestamoScreen> {
                   ),
                   const SizedBox(height: 15),
 
-                  // Campo de Resultado de Cuota
                   _buildTextField(
                     "Cuota Mensual",
                     cuotaController,
@@ -109,7 +135,6 @@ class _SolicitarPrestamoScreenState extends State<SolicitarPrestamoScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Mostrar la tabla de pagos si ya se calculó
                   if (_payments.isNotEmpty)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,11 +152,47 @@ class _SolicitarPrestamoScreenState extends State<SolicitarPrestamoScreen> {
                     ),
                   const SizedBox(height: 20),
 
-                  // Botón para solicitar el préstamo
                   if (!_isLoading)
                     ElevatedButton(
-                      onPressed: () {
-                        // Aquí puedes agregar la lógica para solicitar el préstamo
+                      onPressed: () async {
+                        double capital =
+                            double.tryParse(capitalController.text) ?? 0;
+                        double tasa = double.tryParse(rateController.text) ?? 0;
+                        int periodos = int.tryParse(periodController.text) ?? 0;
+                        double cuota =
+                            double.tryParse(cuotaController.text) ?? 0;
+
+                        final prestamoController = PrestamoController();
+                        await prestamoController.registrarPrestamo(
+                          uid: "1",
+                          monto: capital,
+                          tasa: tasa,
+                          periodos: periodos,
+                          cuotaMensual: cuota,
+                        );
+                        try {
+                          final result =
+                              await prestamoController.obtenerPrestamos();
+
+                          // Imprimir el resultado en la consola
+                          if (result.isNotEmpty) {
+                            print("Préstamos encontrados:");
+                            for (var prestamo in result) {
+                              print("Monto: ${prestamo['monto']}");
+                              print("Tasa: ${prestamo['tasa']}");
+                              print("Periodos: ${prestamo['periodos']}");
+                              print(
+                                "Cuota mensual: ${prestamo['cuota_mensual']}",
+                              );
+                              print("Fecha: ${prestamo['fecha']}");
+                              print("---");
+                            }
+                          } else {
+                            print("No hay préstamos para este cliente.");
+                          }
+                        } catch (e) {
+                          print("Error al obtener los préstamos: $e");
+                        }
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text("Préstamo solicitado exitosamente."),
@@ -158,16 +219,9 @@ class _SolicitarPrestamoScreenState extends State<SolicitarPrestamoScreen> {
               ),
             ),
           ),
-
-          // Overlay: Capa encima cuando se está cargando
           if (_isLoading)
             Container(
-              color: const Color.fromARGB(
-                120,
-                0,
-                0,
-                0,
-              ), // Color de fondo semitransparente
+              color: const Color.fromARGB(120, 0, 0, 0),
               child: const Center(
                 child: CircularProgressIndicator(color: Colors.white),
               ),
@@ -177,7 +231,6 @@ class _SolicitarPrestamoScreenState extends State<SolicitarPrestamoScreen> {
     );
   }
 
-  // Método para construir campos de texto
   Widget _buildTextField(
     String label,
     TextEditingController controller, {
@@ -188,7 +241,9 @@ class _SolicitarPrestamoScreenState extends State<SolicitarPrestamoScreen> {
     return TextField(
       controller: controller,
       keyboardType:
-          isNumeric ? TextInputType.numberWithOptions(decimal: true) : null,
+          isNumeric
+              ? const TextInputType.numberWithOptions(decimal: true)
+              : null,
       readOnly: readOnly,
       decoration: InputDecoration(
         labelText: label,
@@ -198,23 +253,83 @@ class _SolicitarPrestamoScreenState extends State<SolicitarPrestamoScreen> {
     );
   }
 
-  // Método para calcular resultados
   void calcularResultados() async {
     FocusScope.of(context).unfocus();
     setState(() => _isLoading = true);
-    await Future.delayed(const Duration(seconds: 2)); // Simula espera
+    await Future.delayed(const Duration(seconds: 1));
 
     double capital = double.tryParse(capitalController.text) ?? 0;
-    double tasa = double.tryParse(rateController.text) ?? 0;
+    double tasa = (double.tryParse(rateController.text) ?? 0) / 100;
     int periodos = int.tryParse(periodController.text) ?? 0;
 
     try {
-      // Cálculo de cuota mensual
-      double cuotaMensual = _calcularCuota(capital, tasa / 100, periodos);
-      cuotaController.text = formatCurrency(cuotaMensual);
+      double cuota = 0;
+      List<Map<String, num>> pagos = [];
 
-      // Mostrar la distribución de pagos
-      _showPaymentDistribution(capital, tasa / 100, periodos);
+      switch (selectedCalculationType) {
+        case 'Interés Simple':
+          cuota = capital * tasa * periodos;
+          cuotaController.text = formatCurrency(capital + cuota);
+          pagos = [
+            {'period': 1, 'interest': cuota, 'principal': capital},
+          ];
+          break;
+
+        case 'Interés Compuesto':
+          double montoFinal = capital * pow(1 + tasa, periodos);
+          cuotaController.text = formatCurrency(montoFinal);
+          pagos = [
+            {
+              'period': periodos,
+              'interest': montoFinal - capital,
+              'principal': capital,
+            },
+          ];
+          break;
+
+        case 'Amortización':
+          cuota = _calcularCuota(capital, tasa, periodos);
+          cuotaController.text = formatCurrency(cuota);
+          pagos = _generarTablaAmortizacion(capital, tasa, periodos, cuota);
+          break;
+
+        case 'Gradiente':
+          double g = 100; // incremento fijo simulado
+          for (int i = 1; i <= periodos; i++) {
+            cuota += capital + g * (i - 1);
+          }
+          cuotaController.text = formatCurrency(cuota);
+          pagos = List.generate(periodos, (i) {
+            return {
+              'period': i + 1,
+              'interest': 0,
+              'principal': capital + 100 * i,
+            };
+          });
+          break;
+
+        case 'Anualidades':
+          cuota =
+              capital *
+              (tasa * pow(1 + tasa, periodos)) /
+              (pow(1 + tasa, periodos) - 1);
+          cuotaController.text = formatCurrency(cuota);
+          pagos = List.generate(periodos, (i) {
+            double interes = capital * tasa;
+            double abono = cuota - interes;
+            capital -= abono;
+            return {'period': i + 1, 'interest': interes, 'principal': abono};
+          });
+          break;
+
+        default:
+          cuotaController.text = "N/A";
+          pagos = [];
+      }
+
+      setState(() {
+        _payments = pagos;
+      });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
@@ -224,24 +339,16 @@ class _SolicitarPrestamoScreenState extends State<SolicitarPrestamoScreen> {
     }
   }
 
-  // Función para calcular la cuota mensual
   double _calcularCuota(double capital, double tasa, int periodos) {
-    double cuota =
-        (capital * tasa) /
-        (1 - pow(1 + tasa, -periodos).toDouble()); // Exponentiation corrected
-    return cuota;
+    return (capital * tasa) / (1 - pow(1 + tasa, -periodos));
   }
 
-  // Función para mostrar la distribución de pagos
   void _showPaymentDistribution(double capital, double tasa, int periodos) {
-    // Aquí se calcula cómo se distribuye entre capital e intereses a lo largo de los pagos
+    final cuota = _calcularCuota(capital, tasa, periodos);
     final payments = List.generate(periodos, (index) {
-      double interestPayment = capital * tasa; // Pago de intereses
-      double principalPayment =
-          _calcularCuota(capital, tasa, periodos) -
-          interestPayment; // Pago del capital
-      capital -= principalPayment; // Reducir el capital restante
-
+      double interestPayment = capital * tasa;
+      double principalPayment = cuota - interestPayment;
+      capital -= principalPayment;
       return {
         'period': index + 1,
         'interest': interestPayment,
@@ -250,12 +357,10 @@ class _SolicitarPrestamoScreenState extends State<SolicitarPrestamoScreen> {
     });
 
     setState(() {
-      // Almacenar la distribución de pagos para la gráfica
       _payments = payments;
     });
   }
 
-  // Construcción de la tabla de distribución de pagos
   Widget _buildPaymentDistributionTable() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -284,7 +389,20 @@ class _SolicitarPrestamoScreenState extends State<SolicitarPrestamoScreen> {
   }
 }
 
+List<Map<String, num>> _generarTablaAmortizacion(
+  double capital,
+  double tasa,
+  int periodos,
+  double cuota,
+) {
+  return List.generate(periodos, (index) {
+    double interes = capital * tasa;
+    double abono = cuota - interes;
+    capital -= abono;
+    return {'period': index + 1, 'interest': interes, 'principal': abono};
+  });
+}
+
 String formatCurrency(double value) {
-  // Función para formatear como moneda
-  return "\$${value.toStringAsFixed(2)}"; // Ahora con el signo de dólar
+  return "\$${value.toStringAsFixed(2)}";
 }
