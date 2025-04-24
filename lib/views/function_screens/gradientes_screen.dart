@@ -163,6 +163,7 @@ class _GradientesScreen extends State<GradientesScreen> {
   }
 
   void calcularResultados() async {
+    FocusScope.of(context).unfocus();
     setState(() => _isLoading = true);
     Future.delayed(const Duration(seconds: 2)); // Simula espera
     // Lógica para calcular el gradiente

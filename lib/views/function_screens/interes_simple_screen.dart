@@ -69,6 +69,7 @@ class _InteresSimpleScreenState extends State<InteresSimpleScreen> {
                   ),
                   const SizedBox(height: 5),
                   const Text('Tiempo'),
+                  const SizedBox(height: 5),
                   Row(
                     children: [
                       Expanded(
@@ -137,6 +138,8 @@ class _InteresSimpleScreenState extends State<InteresSimpleScreen> {
   }
 
   void calcularResultados() async {
+    FocusScope.of(context).unfocus(); // Oculta el teclado
+
     double capital = parseCurrency(capitalController.text);
     double rate = parseCurrency(rateController.text);
     double generated = parseCurrency(interesController.text);
@@ -147,8 +150,23 @@ class _InteresSimpleScreenState extends State<InteresSimpleScreen> {
     Tiempo duree = Tiempo(year, month, day);
 
     try {
+      // Si todos los campos están completos, no hay nada que calcular
+      if (capital != 0 && rate != 0 && generated != 0 && !duree.isEmpty()) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'No se ha identificado una variable desconocida para calcular. '
+              'Asegúrese de dejar un campo vacío o en cero.',
+            ),
+            backgroundColor: Colors.orange,
+          ),
+        );
+        return;
+      }
+
       setState(() => _isLoading = true);
       await Future.delayed(const Duration(seconds: 2)); // Simula espera
+
       if (capital == 0) {
         capitalController.text = formatCurrency(
           logicController.calcularCapitalSimple(rate / 100, generated, duree),
@@ -161,7 +179,7 @@ class _InteresSimpleScreenState extends State<InteresSimpleScreen> {
               duree,
             ) *
             100;
-        rateController.text = newrate.toStringAsFixed(2);
+        rateController.text = formatCurrency(newrate);
       } else if (duree.isEmpty()) {
         duree = logicController.calcularTiempoInteresSimple(
           capital,

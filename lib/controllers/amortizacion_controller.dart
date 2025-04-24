@@ -9,9 +9,12 @@ class AmortizacionController {
   //n = numero de meses
 
   List<Map<String, dynamic>> francesa(double p, double i, int n) {
-    //Validar Argumentos
+    // Validar argumentos
     validarPositivo(p, 'Capital (p)');
+    validarRango(p, 'Capital (p)', max: 1e12); // Capital ≤ 1 billón
     validarPositivo(i, 'Tasa de interés (i)');
+    validarRango(i, 'Tasa de interés (i)', min: 0.0, max: 2.0); // Tasa ≤ 200%
+    validarPrecision(i, 4, 'Tasa de interés (i)'); // Máximo 4 decimales
     validarMayorQueCero(n, 'Número de meses (n)');
 
     double r = i; // tasa de interes mensual
@@ -37,12 +40,15 @@ class AmortizacionController {
   }
 
   List<Map<String, dynamic>> alemana(double p, double i, int n) {
-    //Validar Argumentos
+    // Validar argumentos
     validarPositivo(p, 'Capital (p)');
+    validarRango(p, 'Capital (p)', max: 1e12); // Capital ≤ 1 billón
     validarPositivo(i, 'Tasa de interés (i)');
+    validarRango(i, 'Tasa de interés (i)', min: 0.0, max: 2.0); // Tasa ≤ 200%
+    validarPrecision(i, 4, 'Tasa de interés (i)'); // Máximo 4 decimales
     validarMayorQueCero(n, 'Número de meses (n)');
 
-    //Calculos
+    // Cálculos
     double A = double.parse(
       (p / n).toStringAsFixed(2),
     ); // abono fijo de capital
@@ -69,9 +75,12 @@ class AmortizacionController {
   }
 
   List<Map<String, double>> americana(double p, double i, int n) {
-    //Validar Argumentos
+    // Validar argumentos
     validarPositivo(p, 'Capital (p)');
+    validarRango(p, 'Capital (p)', max: 1e12); // Capital ≤ 1 billón
     validarPositivo(i, 'Tasa de interés (i)');
+    validarRango(i, 'Tasa de interés (i)', min: 0.0, max: 2.0); // Tasa ≤ 200%
+    validarPrecision(i, 4, 'Tasa de interés (i)'); // Máximo 4 decimales
     validarMayorQueCero(n, 'Número de meses (n)');
 
     double cuota = p * i;

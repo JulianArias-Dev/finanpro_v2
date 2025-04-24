@@ -13,8 +13,11 @@ class GradientesController {
     // Validar argumentos
     validarDiferenteDeCero(g, 'Variación (g)');
     validarMayorQueCero(A, 'Aporte (A)');
+    validarRango(A, 'Aporte (A)', max: 1e12); // Aporte ≤ 1 billón
     validarMayorQueCero(n, 'Número de periodos (n)');
     validarMayorQueCero(i, 'Tasa de interés (i)');
+    validarRango(i, 'Tasa de interés (i)', min: 0.0, max: 2.0); // Tasa ≤ 200%
+    validarPrecision(i, 4, 'Tasa de interés (i)'); // Máximo 4 decimales
 
     double vp =
         (A * (1 - pow(1 / (1 + i), n)) / i) +
@@ -34,11 +37,14 @@ class GradientesController {
     int n = 0,
     double i = 0,
   }) {
-    // Validar Argumentos
+    // Validar argumentos
     validarMayorQueCero(g, 'Variación (g)');
     validarMayorQueCero(A, 'Aporte (A)');
+    validarRango(A, 'Aporte (A)', max: 1e12); // Aporte ≤ 1 billón
     validarMayorQueCero(n, 'Número de periodos (n)');
     validarMayorQueCero(i, 'Tasa de interés (i)');
+    validarRango(i, 'Tasa de interés (i)', min: 0.0, max: 2.0); // Tasa ≤ 200%
+    validarPrecision(i, 4, 'Tasa de interés (i)'); // Máximo 4 decimales
 
     double vp = 0;
     if (i != g) {
@@ -61,11 +67,14 @@ class GradientesController {
     int n = 0,
     double i = 0,
   }) {
-    // Validar Argumentos
+    // Validar argumentos
     validarMayorQueCero(g, 'Variación (g)');
     validarMayorQueCero(A, 'Aporte (A)');
+    validarRango(A, 'Aporte (A)', max: 1e12); // Aporte ≤ 1 billón
     validarMayorQueCero(n, 'Número de periodos (n)');
     validarMayorQueCero(i, 'Tasa de interés (i)');
+    validarRango(i, 'Tasa de interés (i)', min: 0.0, max: 2.0); // Tasa ≤ 200%
+    validarPrecision(i, 4, 'Tasa de interés (i)'); // Máximo 4 decimales
 
     double vp = 0;
     if (i != g) {

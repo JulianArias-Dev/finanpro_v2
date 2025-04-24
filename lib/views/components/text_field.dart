@@ -1,29 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+import 'package:intl/intl.dart';
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 
 Widget buildTextField(
   String label,
   TextEditingController controller, {
   bool isNumeric = false,
   bool isMoney = false,
-  bool readOnly = false, // Permitir campos solo de lectura
+  bool readOnly = false,
   String? hintText,
 }) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 16.0),
     child: TextFormField(
       controller: controller,
-      keyboardType: isNumeric ? TextInputType.number : TextInputType.text,
+      keyboardType:
+          isNumeric
+              ? const TextInputType.numberWithOptions(decimal: true)
+              : TextInputType.text,
       inputFormatters:
           isMoney
               ? [
-                MoneyInputFormatter(
-                  thousandSeparator: ThousandSeparator.Comma,
-                  mantissaLength: 2,
+                CurrencyTextInputFormatter(
+                  NumberFormat.currency(
+                    locale: 'es_CO', // o 'en_US' para inglés
+                    symbol: '', // símbolo que prefieras
+                    decimalDigits: 2,
+                  ),
                 ),
               ]
               : null,
-      readOnly: readOnly, // Se mantiene la opción de solo lectura
+      readOnly: readOnly,
       decoration: InputDecoration(
         labelText: label,
         hintText: hintText,

@@ -237,6 +237,7 @@ class _CapitalizacionScreenState extends State<CapitalizacionScreen> {
   }
 
   void calcularResultado() async {
+    FocusScope.of(context).unfocus();
     try {
       setState(() => _isLoading = true);
       await Future.delayed(const Duration(seconds: 2)); // Simula espera
@@ -269,6 +270,8 @@ class _CapitalizacionScreenState extends State<CapitalizacionScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
       );
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 }

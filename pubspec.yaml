@@ -43,6 +43,8 @@ dependencies:
   get_storage: any
   firebase_core_web: any
   flutter_multi_formatter: ^2.9.1
+  currency_text_input_formatter: ^2.2.9
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_launcher_icons: 

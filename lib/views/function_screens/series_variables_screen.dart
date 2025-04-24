@@ -157,6 +157,7 @@ class _SeriesVariablesScreen extends State<SeriesVariablesScreen> {
   }
 
   void calcularResultados() async {
+    FocusScope.of(context).unfocus();
     // Lógica para calcular el gradiente
     double pagos = parseCurrency(pagosController.text);
     double variacion = parseCurrency(variacionController.text);
