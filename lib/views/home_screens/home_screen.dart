@@ -15,8 +15,14 @@ import 'package:finanpro_v2/views/components/my_drawer.dart';
 import 'package:finanpro_v2/views/components/option_button.dart';
 import 'package:finanpro_v2/controllers/text_formater.dart' as textFormatter;
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final AuthController authController = Get.find<AuthController>();
 
   @override
@@ -47,9 +53,10 @@ class HomeScreen extends StatelessWidget {
         ),
         drawer: MyDrawer(),
         resizeToAvoidBottomInset: true,
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+        body: RefreshIndicator(
+          onRefresh: _refreshUser,
+          child: ListView(
+            padding: EdgeInsets.zero,
             children: [
               Container(
                 width: double.infinity,
@@ -198,5 +205,9 @@ class HomeScreen extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Future<void> _refreshUser() async {
+    await authController.refreshUser();
   }
 }

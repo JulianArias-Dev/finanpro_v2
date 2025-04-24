@@ -134,6 +134,25 @@ class AuthController extends GetxController {
     storage.value.write('password', password);
   }
 
+  // Refrescar Usuario
+  Future<void> refreshUser() async {
+    if (user.value != null) {
+      try {
+        isLoading.value = true;
+        Usuario? refreshedUser = await _firebaseService.refreshUserData();
+        if (refreshedUser != null) {
+          user.value = refreshedUser; // Actualizar el usuario
+        } else {
+          Get.snackbar("Error", "No se pudo actualizar el usuario");
+        }
+      } catch (e) {
+        Get.snackbar("Error", "Ocurrió un error al refrescar el usuario");
+      } finally {
+        isLoading.value = false;
+      }
+    }
+  }
+
   // Intentar login automático
   Future<void> autoLogin() async {
     String? documentNumber = storage.value.read('documentNumber');
