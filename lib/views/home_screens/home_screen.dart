@@ -7,11 +7,13 @@ import 'package:finanpro_v2/views/function_screens/interes_compuesto_screen.dart
 import 'package:finanpro_v2/views/function_screens/interes_simple_screen.dart';
 import 'package:finanpro_v2/views/function_screens/series_variables_screen.dart';
 import 'package:finanpro_v2/views/function_screens/tir_screen.dart';
+import 'package:finanpro_v2/views/home_screens/SolicitarPrestamoScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:finanpro_v2/controllers/auth_controller.dart';
 import 'package:finanpro_v2/views/components/my_drawer.dart';
 import 'package:finanpro_v2/views/components/option_button.dart';
+import 'package:finanpro_v2/controllers/text_formater.dart' as textFormatter;
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -69,7 +71,7 @@ class HomeScreen extends StatelessWidget {
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                     Text(
-                      "\$ ${formatCurrency(user.amount)}",
+                      "\$ ${textFormatter.formatCurrency(user.amount)}",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 26,
@@ -174,7 +176,11 @@ class HomeScreen extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          buildOptionButton("Nuevo Préstamo", context, null),
+                          buildOptionButton(
+                            "Nuevo Préstamo",
+                            context,
+                            const SolicitarPrestamoScreen(),
+                          ),
                           buildOptionButton(
                             "Préstamos Vigentes",
                             context,
