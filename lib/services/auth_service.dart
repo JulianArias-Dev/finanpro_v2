@@ -145,7 +145,7 @@ class AuthService {
         email: data['email'],
         phone: data['phone'],
         birthDate: (data['birthDate'] as Timestamp).toDate(),
-        amount: data.containsKey('amount') ? data['amount'] : 0,
+        amount: data.containsKey('amount') ? data['amount'].toDouble() : 0,
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'wrong-password') {
@@ -173,6 +173,41 @@ class AuthService {
       await _auth.sendPasswordResetEmail(email: email);
     } catch (e) {
       throw StateError('Error al enviar el correo de recuperación: $e');
+    }
+  }
+
+  Future<Usuario?> refreshUserData() async {
+    try {
+      User? user = _auth.currentUser;
+      if (user == null) {
+        throw StateError('No hay ningún usuario autenticado.');
+      }
+
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(user.uid).get();
+
+      if (!userDoc.exists) {
+        throw StateError(
+          'No se encontraron los datos del usuario en Firestore.',
+        );
+      }
+
+      Map<String, dynamic> data = userDoc.data() as Map<String, dynamic>;
+
+      return Usuario(
+        id: user.uid,
+        firstName: data['firstName'],
+        secondName: data.containsKey('secondName') ? data['secondName'] : '',
+        firstLastName: data['firstLastName'],
+        secondLastName: data['secondLastName'],
+        documentNumber: data['documentNumber'],
+        email: data['email'],
+        phone: data['phone'],
+        birthDate: (data['birthDate'] as Timestamp).toDate(),
+        amount: data.containsKey('amount') ? data['amount'].toDouble() : 0.0,
+      );
+    } catch (e) {
+      throw StateError('Error al refrescar los datos del usuario: $e');
     }
   }
 
